@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import TabButton from "./TabButton"
 import LoginPanel from "./LoginPanel"
+import Drink from "./items/Drink"
+import Card from "./Card"
+import Map from "./map/Map"
 
 const Panel = () => {
   const [panel, setPanel] = useState("...")
@@ -25,8 +28,10 @@ const Panel = () => {
           )
         })}
       </menu>
-      {panel}
+      <Card>{panel}</Card>
+      
       <LoginPanel />
+      <Map></Map>
     </section>
   )
 }

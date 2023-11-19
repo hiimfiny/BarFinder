@@ -46,3 +46,11 @@ code {
   background-color: #7925d3;
   color: #ebe7ef;
 }
+
+.card {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+  background-color: #ebe7ef;
+}
