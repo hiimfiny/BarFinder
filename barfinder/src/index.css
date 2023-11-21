@@ -1,17 +1,31 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex: 1 1 0%;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
+.menu {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex: 1 1 0%;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  width: 60em;
+}
 #menus h2 {
   text-align: left;
 }
@@ -22,7 +36,6 @@ code {
   gap: 0.5rem;
   list-style: none;
   justify-content: center;
-  
 }
 
 #menus menu button {
@@ -53,4 +66,23 @@ code {
   padding: 5px;
   margin: 5px;
   background-color: #ebe7ef;
+}
+
+.drink-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.drink-name {
+}
+
+.drink-buttons button {
+  background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+
+  
 }
