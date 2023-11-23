@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Panel from './components/MainPanel';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (

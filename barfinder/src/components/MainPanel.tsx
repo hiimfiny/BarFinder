@@ -1,18 +1,32 @@
 import React, { useState } from "react"
+import { Modal } from "react-bootstrap"
 import TabButton from "./TabButton"
-import LoginPanel from "./user/LoginPanel"
 import DrinkPanel from "./drink/DrinkPanel"
+import LoginPanel from "./user/LoginPanel"
 import Card from "./Card"
 import Map from "./map/Map"
 import IngredientsPanel from "./ingredient/IngredientsPanel"
 import PubPanel from "./pub/PubPanel"
+
 const Panel = () => {
   const [panel, setPanel] = useState("...")
+  const [showLogin, setShowLogin] = useState(false)
+
+  const handleClose = () => setShowLogin(false)
+  const handleShow = () => setShowLogin(true)
+
   const onClick = (text: string) => {
     console.log(text)
-    setPanel(text)
+    if (text != "Login") setPanel(text)
+    if (text === "Login") handleShow()
   }
-  const menuButtons: string[] = ["Drinks", "Ingredients", "Pubs", "Map"]
+  const menuButtons: string[] = [
+    "Drinks",
+    "Ingredients",
+    "Pubs",
+    "Map",
+    "Login",
+  ]
 
   return (
     <section id="menus">
@@ -29,7 +43,9 @@ const Panel = () => {
           )
         })}
       </menu>
-      <Card backgroundColor="#6c6177">{panel}</Card>
+      <Modal show={showLogin} onHide={handleClose}>
+        <LoginPanel></LoginPanel>
+      </Modal>
       {panel === "Drinks" && <DrinkPanel />}
       {panel === "Ingredients" && <IngredientsPanel />}
       {panel === "Pubs" && <PubPanel />}

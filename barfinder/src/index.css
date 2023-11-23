@@ -60,29 +60,25 @@ code {
   color: #ebe7ef;
 }
 
-.card {
+/*  .card {
   border: 1px solid black;
   border-radius: 10px;
   padding: 5px;
   margin: 5px;
   background-color: #ebe7ef;
-}
+} */
 
 .drink-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.drink-name {
-}
 
 .drink-buttons button {
   background-color: transparent;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-    overflow: hidden;
-    outline: none;
-
-  
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
 }
