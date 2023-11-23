@@ -8,7 +8,8 @@ type MapOptions = google.maps.MapOptions
 type LatLngLiteral = google.maps.LatLngLiteral
 
 const Map = () => {
-  const [selectedPub, setSelectedPub] = useState("")
+  const [selectedPub, setSelectedPub] = useState('')
+  const [pub, setPub] = useState<Pub | undefined> (undefined)
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyA8Q5IvOIuWGKHgc2hURRzeYSgggxnP5wg",
@@ -31,7 +32,7 @@ const Map = () => {
     () => ({ disableDefaultUI: true, clickableIcons: false, styles: myStyles }),
     []
   )
-
+const PubInstance = Pubs.filter((filterPub) => filterPub.name === selectedPub).at(0)
   if (!isLoaded) return <div>Loading...</div>
   return (
     <div>
@@ -51,12 +52,14 @@ const Map = () => {
               title={pub.name}
               onClick={() => {
                 setSelectedPub(pub.name)
+                setPub(Pubs.filter((filterPub) => filterPub.name === pub.name).at(0))
+
               }}
             ></MarkerF>
           ))}
           
         </GoogleMap>
-        <div className="map-sidebar">{selectedPub}</div>
+        <div className="map-sidebar">{pub?.name}</div>
       </div>
     </div>
   )
