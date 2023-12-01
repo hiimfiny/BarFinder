@@ -4,16 +4,20 @@ import { IngredientType } from "../../data/IngredientsData"
 
 type ingredientFormProps = {
   onFormSubmit: (formResults: IngredientType) => void
+  id: string
+  name: string
+  abv: string
+  type: string
 }
 const IngredientForm = (props: ingredientFormProps) => {
-  const [formName, setFormName] = useState("")
-  const [formAbv, setFormAbv] = useState("")
-  const [formType, setFormType] = useState("")
+  const [formName, setFormName] = useState(props.name)
+  const [formAbv, setFormAbv] = useState(props.abv)
+  const [formType, setFormType] = useState(props.type)
 
   const onFormSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
     const formResult = {
-      id: "drink3",
+      _id: "",
       name: formName,
       abv: parseInt(formAbv, 10),
       type: formType,
@@ -31,7 +35,8 @@ const IngredientForm = (props: ingredientFormProps) => {
       >
         <Form.Control
           type="text"
-          placeholder=""
+          placeholder={formName}
+          
           onChange={(e) => setFormName(e.target.value)}
         />
       </FloatingLabel>

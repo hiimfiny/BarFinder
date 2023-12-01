@@ -3,7 +3,6 @@ import { Modal } from "react-bootstrap"
 import TabButton from "./TabButton"
 import DrinkPanel from "./drink/DrinkPanel"
 import LoginPanel from "./user/LoginPanel"
-import Card from "./Card"
 import Map from "./map/Map"
 import IngredientsPanel from "./ingredient/IngredientsPanel"
 import PubPanel from "./pub/PubPanel"
@@ -29,7 +28,7 @@ const Panel = () => {
   ]
 
   return (
-    <section id="menus">
+    <section id="menus" className="menus">
       <menu>
         {menuButtons.map((menuButton) => {
           return (

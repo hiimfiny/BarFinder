@@ -9,6 +9,8 @@ body {
   align-items: center;
   display: flex;
   flex: 1 1 0%;
+
+
 }
 
 code {
@@ -16,15 +18,14 @@ code {
     monospace;
 }
 
-.menu {
+.menus {
   margin: 0;
   padding: 0;
-  display: flex;
-  flex: 1 1 0%;
+
   justify-content: center;
   position: relative;
   align-items: center;
-  width: 60em;
+  width: 1000px;
 }
 #menus h2 {
   text-align: left;
