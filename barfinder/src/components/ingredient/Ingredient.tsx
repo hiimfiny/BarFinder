@@ -1,10 +1,9 @@
 import React, { useState } from "react"
-//import Card from "../Card"
-import { IngredientType } from "../../data/IngredientsData"
+
+import { IngredientType, emptyStar, fullStar } from "../Types"
 import IngredientForm from "./IngredientForm"
-import Card from "react-bootstrap/Card"
-import Button from "react-bootstrap/Button"
-import { Stack, Modal } from "react-bootstrap"
+
+import { Card, Button, Stack, Modal } from "react-bootstrap"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -18,17 +17,16 @@ type IngredientProps = IngredientType & {
   onEditClick: (formResult: IngredientType) => void
   onDeleteClick: (id: string) => void
   isFavourited: boolean
+  adminUser: boolean
 }
 
-const emptyStar: string = "☆"
-const fullStar: string = "★"
 const Ingredient = (props: IngredientProps) => {
   const [showEdit, setShowEdit] = useState(false)
   const handleCloseEdit = () => setShowEdit(false)
   const handleShowEdit = () => setShowEdit(true)
 
   const onEditSubmit = (formResult: IngredientType) => {
-    formResult._id=props._id
+    formResult._id = props._id
     console.log(formResult)
     props.onEditClick(formResult)
     handleCloseEdit()
@@ -49,16 +47,20 @@ const Ingredient = (props: IngredientProps) => {
             >
               {props.isFavourited ? fullStar : emptyStar}
             </Button>
-            <Button
-              onClick={() => {
-                handleShowEdit()
-              }}
-            >
-              <FontAwesomeIcon icon={faPen} />
-            </Button>
-            <Button onClick={() => props.onDeleteClick(props._id)}>
-              <FontAwesomeIcon icon={faTimes} />
-            </Button>
+            {props.adminUser && (
+              <Button
+                onClick={() => {
+                  handleShowEdit()
+                }}
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </Button>
+            )}
+            {props.adminUser && (
+              <Button onClick={() => props.onDeleteClick(props._id)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </Button>
+            )}
           </div>
         </Stack>
         <Modal show={showEdit} onHide={handleCloseEdit}>
@@ -73,7 +75,6 @@ const Ingredient = (props: IngredientProps) => {
               abv={props.abv.toString()}
               type={props.type}
             ></IngredientForm>
-
           </Modal.Body>
         </Modal>
       </Card.Body>

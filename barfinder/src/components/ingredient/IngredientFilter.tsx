@@ -1,13 +1,6 @@
 import React, { useState, SyntheticEvent } from "react"
-import {
-  Form,
-  InputGroup,
-  Row,
-  Col,
-  Button,
-  FloatingLabel,
-} from "react-bootstrap"
-import { filterIngredientType } from "../../data/IngredientsData"
+import { Form, Stack, Button, FloatingLabel } from "react-bootstrap"
+import { filterIngredientType,ingredientTypeArray } from "../Types"
 
 type ingredientFilterProps = {
   onFilterSubmit: (formResults: filterIngredientType) => void
@@ -22,61 +15,57 @@ const IngredientFilter = (props: ingredientFilterProps) => {
     e.preventDefault()
 
     const filterResult = {
-        name: filterName,
-        abv: filterAbv === '' ? 0 : parseInt(filterAbv,10),
-        type: filterType
+      name: filterName,
+      abv: filterAbv === "" ? 0 : parseInt(filterAbv, 10),
+      type: filterType,
     }
     props.onFilterSubmit(filterResult)
   }
 
   return (
-    <Form onSubmit={onFilterSubmit}>
-      <Row className="align-items-center">
-        <Col sm={3} className="my-1">
-          <FloatingLabel
-            controlId="floatingNameInput"
-            label="Name"
-            className="mb-3"
-          >
-            <Form.Control
-              type="text"
-              placeholder=""
-              onChange={(e) => setfilterName(e.target.value)}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col sm={3} className="my-1">
-          <FloatingLabel
-            controlId="floatingAbvInput"
-            label="Abv (%)"
-            className="mb-3"
-          >
-            <Form.Control
-              type="text"
-              placeholder=""
-              onChange={(e) => setfilterAbv(e.target.value)}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col sm={3} className="my-1">
-          <FloatingLabel
-            controlId="floatingTypeInput"
-            label="Type"
-            className="mb-3"
-          >
-            <Form.Select onChange={(e) => setfilterType(e.target.value)}>
-              <option>Select type</option>
-              <option value="spirit">Spirit</option>
-              <option value="beer">Beer</option>
-              <option value="wine">Wine</option>
-            </Form.Select>
-          </FloatingLabel>
-        </Col>
+    <Form onSubmit={onFilterSubmit} className="centered-panel-element">
+      <Stack
+        direction="horizontal"
+        gap={3}
+        className="d-flex justify-content-center"
+      >
+        <FloatingLabel
+          controlId="floatingNameInput"
+          label="Name"
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            onChange={(e) => setfilterName(e.target.value)}
+          />
+        </FloatingLabel>
 
-        <Col xs="auto" className="my-1">
-          <Button type="submit">Filter</Button>
-        </Col>
-      </Row>
+        <FloatingLabel
+          controlId="floatingAbvInput"
+          label="Abv (%)"
+          className="mb-3"
+        >
+          <Form.Control
+            type="text"
+            onChange={(e) => setfilterAbv(e.target.value)}
+          />
+        </FloatingLabel>
+
+        <FloatingLabel
+          controlId="floatingTypeInput"
+          label="Type"
+          className="mb-3"
+        >
+          <Form.Select onChange={(e) => setfilterType(e.target.value)}>
+            <option></option>
+            {ingredientTypeArray.map((type) => (
+            <option value={type}>{type}</option>
+          ))}
+          </Form.Select>
+        </FloatingLabel>
+
+        <Button type="submit">Filter</Button>
+      </Stack>
     </Form>
   )
 }

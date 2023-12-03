@@ -1,70 +1,59 @@
-import React, { useEffect, useState } from "react"
-import { Button, Modal, Stack, Pagination } from "react-bootstrap"
+import React, { useState } from "react"
+import { Button, Modal, Stack } from "react-bootstrap"
 import Ingredient from "./Ingredient"
 import IngredientForm from "./IngredientForm"
 import IngredientFilter from "./IngredientFilter"
+import PaginationPanel from "../PaginationPanel"
 
 import {
   IngredientType,
   filterIngredientType,
-  Ingredients,
-} from "../../data/IngredientsData"
-import { UserIngredients } from "../../data/UserIngredientData"
+} from "../Types"
+
 import axios from "axios"
 
-const IngredientsPanel = () => {
-  const page_size = 5
-  const page_number = 1
-  const defaultIngredients: IngredientType[] = []
-  const [IngredientsList, setIngredientsList] = useState(defaultIngredients)
-  const [FilteredIngredientsList, setFilteredIngredientsList] =
-    useState(defaultIngredients)
+type IngredientsPanelProps = {
+  IngredientsList: IngredientType[]
 
-  const [favouritedByUser, setFavouritedByUser] = useState([""])
+  favouritedByUser: string[]
+  changeIngredients: (array: IngredientType[]) => void
+  adminUser: boolean
+  changeFavourite: (list: string, array: string[]) => void
+}
+
+const IngredientsPanel = (props: IngredientsPanelProps) => {
+  const page_size = 5
+  const [IngredientsList, setIngredientsList] = useState(props.IngredientsList)
+  const [FilteredIngredientsList, setFilteredIngredientsList] = useState(
+    props.IngredientsList
+  )
+  const [favouritedByUser, setFavouritedByUser] = useState(
+    props.favouritedByUser
+  )
   const [showForm, setShowForm] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/ingredients/")
-      .then((res) => {
-        console.log(res.data)
-        setIngredientsList(res.data)
-        setFilteredIngredientsList(
-          res.data.slice(
-            (page_number - 1) * page_size,
-            (page_number - 1) * page_size + page_size
-          )
-        )
-      })
-      .catch((error) => console.log(error))
-
-    axios
-      .get("http://localhost:5000/users/6569189fa362f81f37d14e72")
-      .then((res) => {
-        console.log(res.data)
-        setFavouritedByUser(res.data)
-      })
-  }, [])
+  const [pageNumber, setPageNumber] = useState(1)
 
   const handleCloseForm = () => setShowForm(false)
   const handleShowForm = () => setShowForm(true)
 
   const handleShowFilter = () => setShowFilter(!showFilter)
 
+  const handleSelectPage = (selected_number: number) => {
+    setPageNumber(selected_number)
+  }
+
   const onFavouriteClick = (id: string) => {
-    console.log(id + " favourited")
-    console.log(favouritedByUser)
     let array = favouritedByUser
-    console.log(array)
     if (array.includes(id)) {
       array = array.filter((item) => item !== id)
     } else {
       array = [...array, id]
     }
     setFavouritedByUser(array)
+    props.changeFavourite('ingredient', array)
     axios
-      .post("http://localhost:5000/users/update/6569189fa362f81f37d14e72", {
+      .post("http://localhost:5000/users/update-ingredients/6569189fa362f81f37d14e72", {
         favouritedArray: array,
       })
       .then((res) => console.log(res.data))
@@ -77,13 +66,18 @@ const IngredientsPanel = () => {
       .post("http://localhost:5000/ingredients/add", formResults)
       .then((res) => console.log(res.data))
 
+    props.changeIngredients([...IngredientsList, formResults])
+    setIngredientsList([...IngredientsList, formResults])
     setFilteredIngredientsList([...FilteredIngredientsList, formResults])
   }
 
   const onFilterSubmit = (filterResults: filterIngredientType) => {
     console.log(filterResults)
     const formResultList = IngredientsList.filter(
-      (filterItem) => filterItem.name === filterResults.name
+      (filterItem) =>
+        (filterResults.name !== "" && filterItem.name === filterResults.name) ||
+        (filterResults.abv !== 0 && filterItem.abv === filterResults.abv) ||
+        (filterResults.type !== "" && filterItem.type === filterResults.type)
     )
     setFilteredIngredientsList(formResultList)
     handleShowFilter()
@@ -107,7 +101,7 @@ const IngredientsPanel = () => {
       }
       return item
     })
-
+    props.changeIngredients(updatedIngredients)
     setIngredientsList(updatedIngredients)
     setFilteredIngredientsList(updatedIngredients)
   }
@@ -117,13 +111,14 @@ const IngredientsPanel = () => {
       .delete("http://localhost:5000/ingredients/" + id)
       .then((res) => console.log(res.data))
 
-    setFilteredIngredientsList(
-      FilteredIngredientsList.filter((el) => el._id !== id)
-    )
+    let newList = FilteredIngredientsList.filter((el) => el._id !== id)
+
+    setFilteredIngredientsList(newList)
+    props.changeIngredients(newList)
   }
 
   return (
-    <div>
+    <div className="panel">
       <div>
         <Stack
           direction="horizontal"
@@ -136,13 +131,14 @@ const IngredientsPanel = () => {
           <Button variant="primary" onClick={clearFilter}>
             Clear filter
           </Button>
-          <Button variant="primary" onClick={handleShowForm}>
-            Add ingredient
-          </Button>
+          {props.adminUser && (
+            <Button variant="primary" onClick={handleShowForm}>
+              Add ingredient
+            </Button>
+          )}
         </Stack>
         <br />
         {showFilter && <IngredientFilter onFilterSubmit={onFilterSubmit} />}
-        <br />
 
         <Modal show={showForm} onHide={handleCloseForm}>
           <Modal.Header closeButton>
@@ -153,39 +149,47 @@ const IngredientsPanel = () => {
               onFormSubmit={onFormSubmit}
               id={""}
               name={""}
-              abv={"0"}
+              abv={""}
               type={""}
             ></IngredientForm>
           </Modal.Body>
         </Modal>
       </div>
       <div>
-        <Stack gap={3}>
-          {FilteredIngredientsList.map((item) => (
-            <div>
-              <Ingredient
-                key={item._id}
-                _id={item._id}
-                name={item.name}
-                abv={item.abv}
-                type={item.type}
-                onFavouriteClick={onFavouriteClick}
-                onEditClick={onEditClick}
-                onDeleteClick={onDeleteClick}
-                isFavourited={favouritedByUser.includes(item._id)}
-              />
-            </div>
-          ))}
-        </Stack>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item>{1}</Pagination.Item>
-          <Pagination.Item>{2}</Pagination.Item>
-          <Pagination.Item>{3}</Pagination.Item>
-          <Pagination.Item>{4}</Pagination.Item>
-          <Pagination.Item>{5}</Pagination.Item>
-        </Pagination>
+        {FilteredIngredientsList.length === 0 ? (
+          <div>Nothing to show</div>
+        ) : (
+          <div>
+            <Stack gap={3}>
+              {FilteredIngredientsList.slice(
+                (pageNumber - 1) * page_size,
+                (pageNumber - 1) * page_size + page_size
+              ).map((item) => (
+                <div>
+                  <Ingredient
+                    key={item._id}
+                    _id={item._id}
+                    name={item.name}
+                    abv={item.abv}
+                    type={item.type}
+                    onFavouriteClick={onFavouriteClick}
+                    onEditClick={onEditClick}
+                    onDeleteClick={onDeleteClick}
+                    isFavourited={favouritedByUser.includes(item._id)}
+                    adminUser={props.adminUser}
+                  />
+                </div>
+              ))}
+            </Stack>
+          </div>
+        )}
+
+        <PaginationPanel
+          currentPage={pageNumber}
+          totalElements={FilteredIngredientsList.length}
+          pageSize={page_size}
+          selectPage={handleSelectPage}
+        ></PaginationPanel>
       </div>
     </div>
   )

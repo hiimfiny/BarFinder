@@ -1,6 +1,5 @@
 const router = require("express").Router()
 let Ingredients = require("../models/ingredient_model")
-const User = require("../models/user_model")
 
 router.route("/").get((req, res) => {
   Ingredients.find()

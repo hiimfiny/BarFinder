@@ -21,9 +21,13 @@ connection.once("open", () => {
 
 const ingredientsRouter = require('./routes/ingredients')
 const usersRouter = require('./routes/users')
+const drinksRouter = require('./routes/drinks')
+const pubsRouter = require('./routes/pubs')
 
 app.use('/ingredients', ingredientsRouter)
 app.use('/users', usersRouter)
+app.use('/drinks', drinksRouter)
+app.use('/pubs', pubsRouter)
 
 app.listen(5000, () => {
   console.log("Server running on port " + port)

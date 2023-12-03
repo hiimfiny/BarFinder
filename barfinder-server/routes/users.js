@@ -10,6 +10,7 @@ router.route("/").get((req, res) => {
 router.route("/add").post((req, res) => {
   const newUser = new Users({
     favouritedIngredients: [],
+    favouritedDrinks: Đ
   })
 
   newUser
@@ -20,12 +21,11 @@ router.route("/add").post((req, res) => {
 
 router.route("/:id").get((req, res) => {
   Users.findById(req.params.id)
-    .then((user) => res.json(user.favouritedIngredients))
+    .then((user) => res.json(user))
     .catch((err) => res.status(400).json("Error " + err))
 })
 
-router.route("/update/:id").post((req, res) => {
-  console.log(req.body.favouritedArray)
+router.route("/update-ingredients/:id").post((req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
       user.favouritedIngredients = req.body.favouritedArray
@@ -37,4 +37,17 @@ router.route("/update/:id").post((req, res) => {
     })
     .catch((err) => res.status(400).json("Error: " + err))
 })
+router.route("/update-drinks/:id").post((req, res) => {
+  Users.findById(req.params.id)
+    .then((user) => {
+      user.favouritedDrinks = req.body.favouritedArray
+
+      user
+        .save()
+        .then(() => res.json("User updated"))
+        .catch((err) => res.status(400).json("Error: " + err))
+    })
+    .catch((err) => res.status(400).json("Error: " + err))
+})
+
 module.exports = router

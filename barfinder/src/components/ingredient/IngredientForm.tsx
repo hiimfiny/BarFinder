@@ -1,6 +1,6 @@
 import React, { useState, SyntheticEvent } from "react"
 import { Form, FloatingLabel, Button } from "react-bootstrap"
-import { IngredientType } from "../../data/IngredientsData"
+import { IngredientType, ingredientTypeArray } from "../Types"
 
 type ingredientFormProps = {
   onFormSubmit: (formResults: IngredientType) => void
@@ -16,28 +16,27 @@ const IngredientForm = (props: ingredientFormProps) => {
 
   const onFormSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
+    
     const formResult = {
       _id: "",
       name: formName,
-      abv: parseInt(formAbv, 10),
+      abv: formAbv === '' ? 0 : parseInt(formAbv, 10),
       type: formType,
     } satisfies IngredientType
     props.onFormSubmit(formResult)
   }
-  
 
   return (
     <Form onSubmit={onFormSubmit}>
       <FloatingLabel
         controlId="floatingNameInput"
-        label="Name"
+        label={"Name"}
         className="mb-3"
       >
         <Form.Control
           type="text"
-          placeholder={formName}
-          
           onChange={(e) => setFormName(e.target.value)}
+          defaultValue={formName}
         />
       </FloatingLabel>
       <FloatingLabel
@@ -47,8 +46,8 @@ const IngredientForm = (props: ingredientFormProps) => {
       >
         <Form.Control
           type="text"
-          placeholder=""
           onChange={(e) => setFormAbv(e.target.value)}
+          defaultValue={formAbv}
         />
       </FloatingLabel>
       <FloatingLabel
@@ -56,11 +55,12 @@ const IngredientForm = (props: ingredientFormProps) => {
         label="Type"
         className="mb-3"
       >
-        <Form.Select onChange={(e) => setFormType(e.target.value)}>
-          <option>Select type</option>
-          <option value="spirit">Spirit</option>
-          <option value="beer">Beer</option>
-          <option value="wine">Wine</option>
+        <Form.Select onChange={(e) => setFormType(e.target.value)} 
+        defaultValue={formType === '' ? "Select type" : formType}>
+          {formType === '' && <option disabled>Select type</option>}
+          {ingredientTypeArray.map((type) => (
+            <option value={type}>{type}</option>
+          ))}
         </Form.Select>
       </FloatingLabel>
       <Button variant="primary" type="submit">

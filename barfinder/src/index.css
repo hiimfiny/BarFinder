@@ -13,6 +13,18 @@ body {
 
 }
 
+.panel{
+  border: 1px solid gray ;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.centered-panel-element{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
