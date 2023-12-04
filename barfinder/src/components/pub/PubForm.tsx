@@ -50,6 +50,11 @@ const PubForm = (props: PubFormProps) => {
     if (field === "lat") location[0] = coord
     if (field === "lng") location[1] = coord
   }
+  const onMenuModalSubmit = (menuResult: MenuItem[]) => {
+    handleCloseMenu()
+    console.log(menuResult)
+    setFormMenu(menuResult)
+  }
   return (
     <Form onSubmit={onFormSubmit}>
       {/* Name, address */}
@@ -87,7 +92,9 @@ const PubForm = (props: PubFormProps) => {
           >
             <Form.Control
               type="text"
-              onChange={(e) => changeFormLocation('lat',parseInt(e.target.value))}
+              onChange={(e) =>
+                changeFormLocation("lat", parseInt(e.target.value))
+              }
               defaultValue={formLocation[0]}
             />
           </FloatingLabel>
@@ -98,7 +105,9 @@ const PubForm = (props: PubFormProps) => {
           >
             <Form.Control
               type="text"
-              onChange={(e) => changeFormLocation('lng',parseInt(e.target.value))}
+              onChange={(e) =>
+                changeFormLocation("lng", parseInt(e.target.value))
+              }
               defaultValue={formLocation[1]}
             />
           </FloatingLabel>
@@ -116,10 +125,7 @@ const PubForm = (props: PubFormProps) => {
             <Modal.Body>
               <PubMenuModal
                 menu={formMenu}
-                onMenuSubmit={() => {
-                  console.log("Menu submitted")
-                  handleCloseMenu()
-                }}
+                onMenuSubmit={onMenuModalSubmit}
               ></PubMenuModal>
             </Modal.Body>
           </Modal>

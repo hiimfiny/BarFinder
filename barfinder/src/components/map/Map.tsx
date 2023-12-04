@@ -12,7 +12,7 @@ const Map = () => {
   const [pub, setPub] = useState<Pub | undefined>(undefined)
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyA8Q5IvOIuWGKHgc2hURRzeYSgggxnP5wg",
+    googleMapsApiKey: "",
   })
 
   const center = useMemo<LatLngLiteral>(

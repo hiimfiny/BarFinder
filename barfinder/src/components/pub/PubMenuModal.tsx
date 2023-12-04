@@ -9,7 +9,7 @@ import { faPlusCircle, faTimes, faPen } from "@fortawesome/free-solid-svg-icons"
 library.add(faPlusCircle, faTimes, faPen)
 
 type PubMenuModalProps = {
-  onMenuSubmit: () => void
+  onMenuSubmit: (menuItems: MenuItem[]) => void
   menu: MenuItem[]
 }
 const defaultMenuItem = {name: '', price: 0}
@@ -21,7 +21,7 @@ const PubMenuModal = (props: PubMenuModalProps) => {
   const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
     console.log(menuItems)
-    props.onMenuSubmit()
+    props.onMenuSubmit(menuItems)
   }
 
   const setNameAndPrice = (field: string, data: string) =>{
