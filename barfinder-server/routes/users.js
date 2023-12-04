@@ -10,7 +10,8 @@ router.route("/").get((req, res) => {
 router.route("/add").post((req, res) => {
   const newUser = new Users({
     favouritedIngredients: [],
-    favouritedDrinks: Đ
+    favouritedDrinks: [],
+    favouritedPubs: []
   })
 
   newUser
@@ -41,6 +42,19 @@ router.route("/update-drinks/:id").post((req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
       user.favouritedDrinks = req.body.favouritedArray
+
+      user
+        .save()
+        .then(() => res.json("User updated"))
+        .catch((err) => res.status(400).json("Error: " + err))
+    })
+    .catch((err) => res.status(400).json("Error: " + err))
+})
+
+router.route("/update-pubs/:id").post((req, res) => {
+  Users.findById(req.params.id)
+    .then((user) => {
+      user.favouritedPubs = req.body.favouritedArray
 
       user
         .save()

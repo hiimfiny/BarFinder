@@ -1,9 +1,9 @@
 import React, { useState, SyntheticEvent } from "react"
 import { Form, Stack, Button, FloatingLabel } from "react-bootstrap"
-import { filterIngredientType,ingredientTypeArray } from "../Types"
+import { FilterIngredientType,ingredientTypeArray } from "../Types"
 
 type ingredientFilterProps = {
-  onFilterSubmit: (formResults: filterIngredientType) => void
+  onFilterSubmit: (formResults: FilterIngredientType) => void
 }
 
 const IngredientFilter = (props: ingredientFilterProps) => {

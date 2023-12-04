@@ -59,7 +59,6 @@ const DrinkForm = (props: DrinkFormProps) => {
       >
         <Form.Control
           type="text"
-          placeholder="aaaaaaaaaaaaaaaa"
           onChange={(e) => setFormName(e.target.value)}
           defaultValue={formName}
         />

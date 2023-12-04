@@ -7,7 +7,7 @@ import PaginationPanel from "../PaginationPanel"
 
 import {
   IngredientType,
-  filterIngredientType,
+  FilterIngredientType,
 } from "../Types"
 
 import axios from "axios"
@@ -71,7 +71,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
     setFilteredIngredientsList([...FilteredIngredientsList, formResults])
   }
 
-  const onFilterSubmit = (filterResults: filterIngredientType) => {
+  const onFilterSubmit = (filterResults: FilterIngredientType) => {
     console.log(filterResults)
     const formResultList = IngredientsList.filter(
       (filterItem) =>

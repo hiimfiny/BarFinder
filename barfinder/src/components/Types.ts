@@ -9,13 +9,13 @@ type MenuItem = {
   price: number
 }
 
-type filterIngredientType = {
+type FilterIngredientType = {
   name: string
   abv: number
   type: string
 }
 
-type IngredientType = filterIngredientType & {
+type IngredientType = FilterIngredientType & {
   _id: string
 }
 
@@ -29,20 +29,46 @@ type DrinkType = FilterDrinkType & {
   _id: string
   img: string
 }
+
+type FilterPubType = {
+  name: string
+  address: string
+  location: number[]
+  ratings: number[]
+  menu: MenuItem[]
+  opentime: OpeningTime[]
+}
+
+type PubType = FilterPubType & {
+  _id: string
+  
+}
+
 const emptyStar: string = "☆"
 const fullStar: string = "★"
 
 const ingredientTypeArray = ["Spirit", "Mixer", "Garnish"]
 const drinkTypeArray = ["Classic", "Strong", "Creamy", "Fancy"]
 const drinkGlassArray = ["High Ball", "Old Fashioned", "Y-glass"]
+const daysOfTheWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+]
 
 export type {
-  OpeningTime,
-  MenuItem,
   IngredientType,
-  filterIngredientType,
+  FilterIngredientType,
   DrinkType,
   FilterDrinkType,
+  PubType,
+  FilterPubType,
+  OpeningTime,
+  MenuItem,
 }
 
 export {
@@ -51,4 +77,5 @@ export {
   ingredientTypeArray,
   emptyStar,
   fullStar,
+  daysOfTheWeek
 }

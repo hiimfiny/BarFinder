@@ -6,7 +6,7 @@ import LoginPanel from "./user/LoginPanel"
 import Map from "./map/Map"
 import IngredientsPanel from "./ingredient/IngredientsPanel"
 import PubPanel from "./pub/PubPanel"
-import { IngredientType, DrinkType } from "./Types"
+import { IngredientType, DrinkType, PubType } from "./Types"
 import axios from "axios"
 
 const Panel = () => {
@@ -18,12 +18,18 @@ const Panel = () => {
 
   const defaultIngredients: IngredientType[] = []
   const defaultDrinks: DrinkType[] = []
+  const defaultPubs: PubType[] = []
+
   const [IngredientsList, setIngredientsList] = useState(defaultIngredients)
   const [favouritedIngredients, setFavouritedIngredients] = useState([""])
 
   const [DrinksList, setDrinksList] = useState(defaultDrinks)
   const [favouritedDrinks, setFavouritedDrinks] = useState([""])
-  const [ingredientsForDrinks, setIngredientsForDrinks] = useState([""])
+
+  const [pubsList, setPubsList] = useState(defaultPubs)
+  const [favouritedPubs, setFavouritedPubs] = useState([""])
+
+  const [ingredientsStringList, setIngredientsStringList] = useState([""])
 
   const admin = true
   const onClick = (text: string) => {
@@ -45,9 +51,14 @@ const Panel = () => {
   const changeDrinks = (array: typeof defaultDrinks) => {
     setDrinksList(array)
   }
+  const changePubs = (array: typeof defaultPubs) => {
+    setPubsList(array)
+  }
+
   const changeFavouriteList = (list: string, array: string[]) =>{
     if(list === 'ingredient') setFavouritedIngredients(array)
     if(list === 'drink') setFavouritedDrinks(array)
+    if(list === 'pub') setFavouritedPubs(array)
   }
 
   useEffect(() => {
@@ -61,7 +72,7 @@ const Panel = () => {
         res.data.forEach((element: { name: string }) => {
           ingredientsForDrinksArray.push(element.name)
         })
-        setIngredientsForDrinks(ingredientsForDrinksArray)
+        setIngredientsStringList(ingredientsForDrinksArray)
       })
       .catch((error) => console.log(error))
 
@@ -71,6 +82,7 @@ const Panel = () => {
         console.log(res.data)
         setFavouritedIngredients(res.data.favouritedIngredients)
         setFavouritedDrinks(res.data.favouritedDrinks)
+        setFavouritedPubs(res.data.favouritedPubs)
       })
 
     axios
@@ -78,6 +90,14 @@ const Panel = () => {
       .then((res) => {
         console.log(res.data)
         setDrinksList(res.data)
+      })
+      .catch((error) => console.log(error))
+
+      axios
+      .get("http://localhost:5000/pubs/")
+      .then((res) => {
+        console.log(res.data)
+        setPubsList(res.data)
       })
       .catch((error) => console.log(error))
   }, [])
@@ -106,7 +126,7 @@ const Panel = () => {
           favouritedByUser={favouritedDrinks}
           changeDrinks={changeDrinks}
           adminUser={admin}
-          IngredientList={ingredientsForDrinks}
+          IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
         />
       )}
@@ -119,7 +139,14 @@ const Panel = () => {
           changeFavourite={changeFavouriteList}
         />
       )}
-      {panel === "Pubs" && <PubPanel />}
+      {panel === "Pubs" && <PubPanel
+      pubsList={pubsList}
+      favouritedByUser={favouritedPubs}
+      changePubs={changePubs}
+      adminUser={admin}
+      IngredientList={ingredientsStringList}
+      changeFavourite={changeFavouriteList}
+      />}
       {panel === "Map" && <Map />}
     </section>
   )
