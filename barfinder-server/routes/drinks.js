@@ -8,6 +8,7 @@ router.route("/").get((req, res) => {
 })
 
 router.route("/add").post((req, res) => {
+  const _id = req.body._id
   const name = req.body.name
   const type = req.body.type
   const ingredients = req.body.ingredients
@@ -15,6 +16,7 @@ router.route("/add").post((req, res) => {
   const img = req.body.img
 
   const newDrink = new Drinks({
+    _id,
     name,
     type,
     ingredients,

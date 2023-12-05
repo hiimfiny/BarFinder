@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Button, Modal, Stack } from "react-bootstrap"
 import PaginationPanel from "../PaginationPanel"
 
-import { PubType, FilterPubType } from "../Types"
+import { PubType, FilterPubType, defaultOpeningTime } from "../Types"
 import Pub from "./Pub"
 import PubFilter from "./PubFilter"
 import PubForm from "./PubForm"
@@ -27,12 +27,15 @@ const PubPanel = (props: PubPanelProps) => {
 
   const [showForm, setShowForm] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
+
   const [pageNumber, setPageNumber] = useState(1)
 
   const handleCloseForm = () => setShowForm(false)
   const handleShowForm = () => setShowForm(true)
 
   const handleShowFilter = () => setShowFilter(!showFilter)
+
+
 
   const handleSelectPage = (selected_number: number) => {
     setPageNumber(selected_number)
@@ -63,17 +66,35 @@ const PubPanel = (props: PubPanelProps) => {
       .then((res) => console.log(res.data))
   }
 
-  const onFormSubmit = (formResults: PubType) =>{
+  const onFormSubmit = (formResults: PubType) => {
     console.log(formResults)
     handleCloseForm()
+
+    axios
+      .post("http://localhost:5000/pubs/add", formResults)
+      .then((res) => console.log(res.data))
+    props.changePubs([...pubsList, formResults])
+    setPubsList([...pubsList, formResults])
+    setFilterPubsList([...pubsList, formResults])
   }
 
   const onEditClick = (formResults: PubType) => {
-    
+    console.log("editclick in pubpanel:")
+    console.log(formResults)
   }
 
   const onDeleteClick = (id: string) => {
-    
+    axios
+      .delete("http://localhost:5000/ingredients/" + id)
+      .then((res) => console.log(res.data))
+
+      let newList = filterPubsList.filter((item) => item._id !== id)
+      setFilterPubsList(newList)
+      props.changePubs(newList)
+  }
+  const onRateClick = (ratings: number[], id: string) => {
+    axios.post("http://localhost:5000/pubs/update-rating/" + id, ratings)
+    .then((res) => console.log(res.data))
   }
 
   return (
@@ -105,17 +126,17 @@ const PubPanel = (props: PubPanelProps) => {
           </Modal.Header>
           <Modal.Body>
             <PubForm
-            onFormSubmit={onFormSubmit}
-            id={""}
-            name={""}
-            address={""}
-            location={[]}
-            menu={[]}
-            opentime={[]}
-
+              onFormSubmit={onFormSubmit}
+              id={""}
+              name={""}
+              address={""}
+              location={[]}
+              menu={[]}
+              opentime={defaultOpeningTime}
             ></PubForm>
           </Modal.Body>
         </Modal>
+        
       </div>
       <div>
         {filterPubsList.length === 0 ? (
@@ -131,20 +152,21 @@ const PubPanel = (props: PubPanelProps) => {
                 .map((item) => (
                   <div>
                     <Pub
-                        key={item._id}
-                        _id={item._id}
-                        name={item.name}
-                        address={item.address}
-                        location={item.location}
-                        ratings={item.ratings}
-                        menu={item.menu}
-                        opentime={item.opentime}
-                        onFavouriteClick={onFavouriteClick}
-                        onEditClick={onEditClick}
-                        onDeleteClick={onDeleteClick}
-                        isFavourited={favouritedByUser.includes(item._id)}
-                        adminUser={props.adminUser}
-                        ingredientsList={props.IngredientList}
+                      key={item._id}
+                      _id={item._id}
+                      name={item.name}
+                      address={item.address}
+                      location={item.location}
+                      ratings={item.ratings}
+                      menu={item.menu}
+                      opentime={item.opentime}
+                      onFavouriteClick={onFavouriteClick}
+                      onEditClick={onEditClick}
+                      onDeleteClick={onDeleteClick}
+                      onRateClick={onRateClick}
+                      isFavourited={favouritedByUser.includes(item._id)}
+                      adminUser={props.adminUser}
+                      ingredientsList={props.IngredientList}
                     ></Pub>
                   </div>
                 ))}
@@ -154,7 +176,7 @@ const PubPanel = (props: PubPanelProps) => {
       </div>
       <PaginationPanel
         currentPage={pageNumber}
-        totalElements={10}
+        totalElements={filterPubsList.length}
         pageSize={page_size}
         selectPage={handleSelectPage}
       ></PaginationPanel>

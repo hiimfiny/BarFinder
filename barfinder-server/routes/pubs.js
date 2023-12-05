@@ -9,6 +9,7 @@ router.route("/").get((req, res) => {
 
 router.route("/add").post((req, res) => {
     console.log(req.body)
+    const _id = req.body._id
   const name = req.body.name
   const address = req.body.address
   const location = req.body.location
@@ -17,6 +18,7 @@ router.route("/add").post((req, res) => {
   const opentime = req.body.opentime
 
   const newPub = new Pubs({
+    _id,
     name,
     address,
     location,
@@ -29,6 +31,24 @@ router.route("/add").post((req, res) => {
     .save()
     .then(() => res.json("Pub added"))
     .catch((err) => res.status(400).json("Error: " + err))
+})
+
+router.route("/:id").delete((req,res) => {
+    Pubs.findByIdAndDelete(req.params.id)
+    .then(() => res.json('Pub deleted'))
+    .catch(err => res.status(400).json("Error: " + err))
+})
+
+router.route("/update-rating/:id").post((req,res) => {
+    Pubs.findById(req.params.id)
+    .then(pub => {
+        pub.ratings = req.body
+
+        pub.save()
+        .then(() => res.json('Ingredient updated!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
 })
 
 module.exports = router

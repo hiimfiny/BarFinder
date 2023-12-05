@@ -37,7 +37,7 @@ const Ingredient = (props: IngredientProps) => {
         <Card.Title>{props.name}</Card.Title>
         <Stack direction="horizontal" gap={3}>
           <div className="p-2">
-            <Card.Text>...</Card.Text>
+            <Card.Text>{props.type +  (props.abv === 0 ? " " :  (" (" +props.abv+ "%)")) }</Card.Text>
           </div>
           <div className="p-2 ms-auto">
             <Button

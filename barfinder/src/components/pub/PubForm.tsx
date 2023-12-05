@@ -1,10 +1,12 @@
 import React, { useState } from "react"
 import { Form, FloatingLabel, Button, Stack, Modal } from "react-bootstrap"
-import { MenuItem, OpeningTime, PubType } from "../Types"
+import { MenuItem, OpeningTime, PubType, defaultOpeningTime } from "../Types"
 import PubMenuModal from "./PubMenuModal"
+import PubOpenHoursModal from "./PubOpenHoursModal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faPlusCircle, faTimes } from "@fortawesome/free-solid-svg-icons"
+import ObjectId from "bson-objectid"
 
 library.add(faPlusCircle, faTimes)
 
@@ -35,7 +37,7 @@ const PubForm = (props: PubFormProps) => {
   const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
     const formResult = {
-      _id: "",
+      _id: new ObjectId().toString(),
       name: formName,
       address: formAddress,
       location: formLocation,
@@ -54,6 +56,12 @@ const PubForm = (props: PubFormProps) => {
     handleCloseMenu()
     console.log(menuResult)
     setFormMenu(menuResult)
+  }
+  const onHoursSubmit = (hoursResult: OpeningTime[]) => {
+    handleCloseOpenHours()
+    console.log('opening times: ')
+    console.log(hoursResult)
+    setFormOpenTime(hoursResult)
   }
   return (
     <Form onSubmit={onFormSubmit}>
@@ -93,7 +101,7 @@ const PubForm = (props: PubFormProps) => {
             <Form.Control
               type="text"
               onChange={(e) =>
-                changeFormLocation("lat", parseInt(e.target.value))
+                changeFormLocation("lat", parseFloat(e.target.value))
               }
               defaultValue={formLocation[0]}
             />
@@ -106,7 +114,7 @@ const PubForm = (props: PubFormProps) => {
             <Form.Control
               type="text"
               onChange={(e) =>
-                changeFormLocation("lng", parseInt(e.target.value))
+                changeFormLocation("lng", parseFloat(e.target.value))
               }
               defaultValue={formLocation[1]}
             />
@@ -118,12 +126,12 @@ const PubForm = (props: PubFormProps) => {
       <div>
         <Stack direction="horizontal" gap={3}>
           <Button onClick={handleShowMenu}>Edit menu</Button>
-          <Modal show={showMenu} onHide={handleCloseMenu}>
+          <Modal show={showMenu} onHide={handleCloseMenu} style={{maxWidth:'none',}}>
             <Modal.Header closeButton>
-              <Modal.Title>...</Modal.Title>
+              <Modal.Title>Menu</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <PubMenuModal
+              <PubMenuModal 
                 menu={formMenu}
                 onMenuSubmit={onMenuModalSubmit}
               ></PubMenuModal>
@@ -131,12 +139,15 @@ const PubForm = (props: PubFormProps) => {
           </Modal>
 
           <Button onClick={handleShowOpenHours}>Edit open hours</Button>
-          <Modal show={showOpenHours} onHide={handleCloseOpenHours}>
+          <Modal show={showOpenHours} onHide={handleCloseOpenHours} >
             <Modal.Header closeButton>
-              <Modal.Title>...</Modal.Title>
+              <Modal.Title>Add the open time</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>...</p>
+              <PubOpenHoursModal
+                openHours = {formOpenTime}
+                onHoursSubmit = {onHoursSubmit}
+              ></PubOpenHoursModal>
             </Modal.Body>
           </Modal>
         </Stack>

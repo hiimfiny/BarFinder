@@ -5,10 +5,7 @@ import IngredientForm from "./IngredientForm"
 import IngredientFilter from "./IngredientFilter"
 import PaginationPanel from "../PaginationPanel"
 
-import {
-  IngredientType,
-  FilterIngredientType,
-} from "../Types"
+import { IngredientType, FilterIngredientType } from "../Types"
 
 import axios from "axios"
 
@@ -51,17 +48,20 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
       array = [...array, id]
     }
     setFavouritedByUser(array)
-    props.changeFavourite('ingredient', array)
+    props.changeFavourite("ingredient", array)
     axios
-      .post("http://localhost:5000/users/update-ingredients/6569189fa362f81f37d14e72", {
-        favouritedArray: array,
-      })
+      .post(
+        "http://localhost:5000/users/update-ingredients/6569189fa362f81f37d14e72",
+        {
+          favouritedArray: array,
+        }
+      )
       .then((res) => console.log(res.data))
   }
 
   const onFormSubmit = (formResults: IngredientType) => {
     handleCloseForm()
-
+    console.log(formResults)
     axios
       .post("http://localhost:5000/ingredients/add", formResults)
       .then((res) => console.log(res.data))
@@ -111,10 +111,64 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
       .delete("http://localhost:5000/ingredients/" + id)
       .then((res) => console.log(res.data))
 
-    let newList = FilteredIngredientsList.filter((el) => el._id !== id)
+    let newList = FilteredIngredientsList.filter((item) => item._id !== id)
 
     setFilteredIngredientsList(newList)
     props.changeIngredients(newList)
+  }
+
+  const onOrderSubmit = (order: string) => {
+    console.log(order)
+    let sortedList: IngredientType[] = []
+    switch (order) {
+      case "Default": {
+        sortedList = FilteredIngredientsList.slice().sort((a, b) => {
+          const nameA = a._id.toUpperCase()
+          const nameB = b._id.toUpperCase()
+
+          if (nameA < nameB) {
+            return -1
+          }
+          if (nameA > nameB) {
+            return 1
+          }
+          return 0
+        })
+        break
+      }
+      case "ABC^": {
+        sortedList = FilteredIngredientsList.slice().sort((a, b) => {
+          const nameA = a.name.toUpperCase() 
+          const nameB = b.name.toUpperCase()
+
+          if (nameA < nameB) {
+            return -1 
+          }
+          if (nameA > nameB) {
+            return 1 
+          }
+          return 0 
+        })
+        break
+      }
+      case "ABCv": {
+        sortedList = FilteredIngredientsList.slice().sort((a, b) => {
+          const nameA = a.name.toUpperCase() 
+          const nameB = b.name.toUpperCase()
+
+          if (nameB < nameA) {
+            return -1 
+          }
+          if (nameB > nameA) {
+            return 1 
+          }
+          return 0 
+        })
+        break
+      }
+    }
+    console.log(sortedList)
+    setFilteredIngredientsList(sortedList)
   }
 
   return (
@@ -138,7 +192,12 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
           )}
         </Stack>
         <br />
-        {showFilter && <IngredientFilter onFilterSubmit={onFilterSubmit} />}
+        {showFilter && (
+          <IngredientFilter
+            onFilterSubmit={onFilterSubmit}
+            onOrderSubmit={onOrderSubmit}
+          />
+        )}
 
         <Modal show={showForm} onHide={handleCloseForm}>
           <Modal.Header closeButton>

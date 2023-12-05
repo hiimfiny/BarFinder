@@ -1,18 +1,27 @@
 import React, { useMemo, useState } from "react"
 
 import { useLoadScript, GoogleMap, MarkerF } from "@react-google-maps/api"
-import { Card, Row, Col, Container } from "react-bootstrap"
-import { Pubs, Pub } from "../../data/PubsData"
+import { Card, Row, Col, Container, Button } from "react-bootstrap"
+
 import "./map.css"
+import { PubType } from "../Types"
+import MapSidePanel from "./MapSidePanel"
+import MapFilter from "./MapFilter"
 type MapOptions = google.maps.MapOptions
 type LatLngLiteral = google.maps.LatLngLiteral
 
-const Map = () => {
-  const [selectedPub, setSelectedPub] = useState("")
-  const [pub, setPub] = useState<Pub | undefined>(undefined)
+type MapProps = {
+  pubsList: PubType[]
+}
+
+const Map = (props: MapProps) => {
+  const [pubsList, setPubsList] = useState(props.pubsList)
+  const [selectedPub, setSelectedPub] = useState(props.pubsList.at(0))
+
+  const [sidePanel, setSidePanel] = useState(false)
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "",
+    googleMapsApiKey: "AIzaSyA8Q5IvOIuWGKHgc2hURRzeYSgggxnP5wg",
   })
 
   const center = useMemo<LatLngLiteral>(
@@ -30,42 +39,49 @@ const Map = () => {
     () => ({ disableDefaultUI: true, clickableIcons: false, styles: myStyles }),
     []
   )
-  const PubInstance = Pubs.filter(
-    (filterPub) => filterPub.name === selectedPub
-  ).at(0)
+  const selectPub = (pub: PubType) => {
+    setSelectedPub(pub)
+    setSidePanel(true)
+  }
+
   if (!isLoaded) return <div>Loading...</div>
   return (
-    <Container >
-      <Row >
-        <Col lg={9}>
-          <GoogleMap
-            zoom={12}
-            center={center}
-            options={options}
-            mapContainerClassName="map"
-          >
-            {Pubs.map((pub) => (
-              <MarkerF
-                key={pub.lat}
-                position={{ lat: pub.lat, lng: pub.lng }}
-                title={pub.name}
-                onClick={() => {
-                  setSelectedPub(pub.name)
-                  setPub(
-                    Pubs.filter((filterPub) => filterPub.name === pub.name).at(
-                      0
-                    )
-                  )
-                }}
-              ></MarkerF>
-            ))}
-          </GoogleMap>
-        </Col>
-        <Col>
-          <div className="map-sidebar">{pub?.name}</div>
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      <div>
+        <MapFilter></MapFilter>
+      </div>
+      <Container style={{ border: "1px solid black", padding: "2px" }}>
+        <Row>
+          <Col lg={sidePanel ? 9 : 12}>
+            <GoogleMap
+              zoom={12}
+              center={center}
+              options={options}
+              mapContainerClassName="map"
+            >
+              {pubsList.map((pub) => (
+                <MarkerF
+                  key={pub._id}
+                  position={{ lat: pub.location[0], lng: pub.location[1] }}
+                  title={pub.name}
+                  onClick={() => {
+                    selectPub(pub)
+                  }}
+                ></MarkerF>
+              ))}
+            </GoogleMap>
+          </Col>
+          {sidePanel && (
+            <Col lg={3}>
+              <MapSidePanel
+                pub={selectedPub}
+                setSidePanel={setSidePanel}
+              ></MapSidePanel>
+            </Col>
+          )}
+        </Row>
+      </Container>
+    </div>
   )
 }
 

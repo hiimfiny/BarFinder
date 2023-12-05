@@ -8,13 +8,13 @@ router.route("/").get((req, res) => {
 })
 
 router.route("/add").post((req, res) => {
-  const id = req.body.id
+  const _id = req.body._id
   const name = req.body.name
   const abv = req.body.abv
   const type = req.body.type
 
   const newIngredient = new Ingredients({
-    id,
+    _id,
     name,
     abv,
     type,

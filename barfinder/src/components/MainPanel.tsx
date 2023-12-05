@@ -31,7 +31,8 @@ const Panel = () => {
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
 
-  const admin = true
+  const [userStatus, setUserStatus] = useState(true)
+
   const onClick = (text: string) => {
     console.log(text)
     if (text != "Login") setPanel(text)
@@ -55,10 +56,10 @@ const Panel = () => {
     setPubsList(array)
   }
 
-  const changeFavouriteList = (list: string, array: string[]) =>{
-    if(list === 'ingredient') setFavouritedIngredients(array)
-    if(list === 'drink') setFavouritedDrinks(array)
-    if(list === 'pub') setFavouritedPubs(array)
+  const changeFavouriteList = (list: string, array: string[]) => {
+    if (list === "ingredient") setFavouritedIngredients(array)
+    if (list === "drink") setFavouritedDrinks(array)
+    if (list === "pub") setFavouritedPubs(array)
   }
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const Panel = () => {
       })
       .catch((error) => console.log(error))
 
-      axios
+    axios
       .get("http://localhost:5000/pubs/")
       .then((res) => {
         console.log(res.data)
@@ -125,7 +126,7 @@ const Panel = () => {
           DrinksList={DrinksList}
           favouritedByUser={favouritedDrinks}
           changeDrinks={changeDrinks}
-          adminUser={admin}
+          adminUser={userStatus}
           IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
         />
@@ -135,19 +136,21 @@ const Panel = () => {
           IngredientsList={IngredientsList}
           favouritedByUser={favouritedIngredients}
           changeIngredients={changeIngredients}
-          adminUser={admin}
+          adminUser={userStatus}
           changeFavourite={changeFavouriteList}
         />
       )}
-      {panel === "Pubs" && <PubPanel
-      pubsList={pubsList}
-      favouritedByUser={favouritedPubs}
-      changePubs={changePubs}
-      adminUser={admin}
-      IngredientList={ingredientsStringList}
-      changeFavourite={changeFavouriteList}
-      />}
-      {panel === "Map" && <Map />}
+      {panel === "Pubs" && (
+        <PubPanel
+          pubsList={pubsList}
+          favouritedByUser={favouritedPubs}
+          changePubs={changePubs}
+          adminUser={userStatus}
+          IngredientList={ingredientsStringList}
+          changeFavourite={changeFavouriteList}
+        />
+      )}
+      {panel === "Map" && <Map pubsList={pubsList} />}
     </section>
   )
 }

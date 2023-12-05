@@ -4,7 +4,7 @@ import { DrinkType, drinkTypeArray, drinkGlassArray } from "../Types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faPlusCircle, faTimes } from "@fortawesome/free-solid-svg-icons"
-
+import ObjectId from "bson-objectid"
 library.add(faPlusCircle, faTimes)
 
 type DrinkFormProps = {
@@ -29,7 +29,7 @@ const DrinkForm = (props: DrinkFormProps) => {
   const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
     const formResult = {
-      _id: "",
+      _id: new ObjectId().toString(),
       name: formName,
       type: formType,
       ingredients: formIngredients,

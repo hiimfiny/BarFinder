@@ -1,7 +1,7 @@
 import React, { useState, SyntheticEvent } from "react"
 import { Form, FloatingLabel, Button } from "react-bootstrap"
 import { IngredientType, ingredientTypeArray } from "../Types"
-
+import ObjectId from "bson-objectid"
 type ingredientFormProps = {
   onFormSubmit: (formResults: IngredientType) => void
   id: string
@@ -18,7 +18,7 @@ const IngredientForm = (props: ingredientFormProps) => {
     e.preventDefault()
     
     const formResult = {
-      _id: "",
+      _id: new ObjectId().toString(),
       name: formName,
       abv: formAbv === '' ? 0 : parseInt(formAbv, 10),
       type: formType,
