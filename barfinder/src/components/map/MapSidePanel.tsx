@@ -9,7 +9,7 @@ import {
   formatDayFromDate,
   generateStarsArray,
   calculateAvgRating,
-  daysOfTheWeek
+  daysOfTheWeek,
 } from "../Types"
 
 import { Button, Stack, Modal, Table } from "react-bootstrap"
@@ -19,6 +19,8 @@ import {
   faLocationDot,
   faMartiniGlassEmpty,
   faClock,
+  faCaretDown,
+  faCaretUp,
 } from "@fortawesome/free-solid-svg-icons"
 
 type MapSidePanelProps = {
@@ -39,8 +41,6 @@ const MapSidePanel = (props: MapSidePanelProps) => {
   let currentDate: Date = new Date()
   useEffect(() => {
     currentDate = new Date()
-    console.log(currentDate)
-    console.log(currentDate.getDay())
   }, [])
   return (
     <div>
@@ -52,7 +52,10 @@ const MapSidePanel = (props: MapSidePanelProps) => {
         <div>
           <div>{props.pub!.name}</div>
           <div>
-            {generateStarsArray(calculateAvgRating(props.pub!.ratings))}
+            <p>
+              {generateStarsArray(calculateAvgRating(props.pub!.ratings))}{" "}
+              {`(${calculateAvgRating(props.pub!.ratings).toFixed(1)})`}
+            </p>
           </div>
         </div>
         <Button
@@ -64,7 +67,7 @@ const MapSidePanel = (props: MapSidePanelProps) => {
         </Button>
       </Stack>
       <br />
-      <br />
+
       <Stack gap={3} className="d-flex justify-content-center">
         <Stack
           direction="horizontal"
@@ -99,11 +102,22 @@ const MapSidePanel = (props: MapSidePanelProps) => {
                   props.pub!.opentime.at(formatDayFromDate(currentDate))!.close
                 )}`
               : "Closed now"}
+            {showOpenTimes ? (
+              <FontAwesomeIcon
+                icon={faCaretUp}
+                style={{ marginLeft: "10px" }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faCaretDown}
+                style={{ marginLeft: "10px" }}
+              />
+            )}
           </div>
 
-{/*     /*       `Closed now - Opens at ${daysOfTheWeek[formatDayFromDate(currentDate)].substring(0,1)} ${formatTimeFromInt(
+          {/*     /*       `Closed now - Opens at ${daysOfTheWeek[formatDayFromDate(currentDate)].substring(0,1)} ${formatTimeFromInt(
             props.pub!.opentime.at(formatDayFromDate(currentDate))!.open
-          )}` */ }
+          )}` */}
         </Stack>
         {showOpenTimes && (
           <Table style={{ fontSize: "12px" }}>
@@ -112,10 +126,11 @@ const MapSidePanel = (props: MapSidePanelProps) => {
                 <tr>
                   <td style={{ textAlign: "left" }}>{item.day}</td>
                   <td>
-                    { (item.open === 0 && item.close ===0) ? "Closed" :
-                    (formatTimeFromInt(item.open) +
-                      " - " +
-                      formatTimeFromInt(item.close))}
+                    {item.open === 0 && item.close === 0
+                      ? "Closed"
+                      : formatTimeFromInt(item.open) +
+                        " - " +
+                        formatTimeFromInt(item.close)}
                   </td>
                 </tr>
               ))}

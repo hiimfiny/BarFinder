@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Button, Modal, Stack } from "react-bootstrap"
 import PaginationPanel from "../PaginationPanel"
 
-import { PubType, FilterPubType, defaultOpeningTime } from "../Types"
+import { PubType, FilterPubType, defaultOpeningTime, DrinkType, calculateAvgRating,menuContainsDrink } from "../Types"
 import Pub from "./Pub"
 import PubFilter from "./PubFilter"
 import PubForm from "./PubForm"
@@ -14,6 +14,7 @@ type PubPanelProps = {
   adminUser: boolean
   IngredientList: string[]
   changeFavourite: (list: string, array: string[]) => void
+  drinksList: DrinkType[]
 }
 
 const PubPanel = (props: PubPanelProps) => {
@@ -45,10 +46,7 @@ const PubPanel = (props: PubPanelProps) => {
   }
 
   const onFavouriteClick = (id: string) => {
-    console.log(id + " favourited")
-    console.log(favouritedByUser)
     let array = favouritedByUser
-    console.log(array)
     if (array.includes(id)) {
       array = array.filter((item) => item !== id)
     } else {
@@ -67,7 +65,6 @@ const PubPanel = (props: PubPanelProps) => {
   }
 
   const onFormSubmit = (formResults: PubType) => {
-    console.log(formResults)
     handleCloseForm()
 
     axios
@@ -79,13 +76,35 @@ const PubPanel = (props: PubPanelProps) => {
   }
 
   const onEditClick = (formResults: PubType) => {
-    console.log("editclick in pubpanel:")
-    console.log(formResults)
+    axios.post("http://localhost:5000/pubs/update/" + formResults._id, formResults)
+    .then((res) => console.log(res.data))
+
+    const updatedPubs = pubsList.map((item) => {
+      if(item._id === formResults._id){
+        return {...item, ...formResults}
+      }
+      return item
+    })
+    props.changePubs(updatedPubs)
+    setPubsList(updatedPubs)
+    setFilterPubsList(updatedPubs)
+  }
+
+  const onFilterSubmit = (filterResults: FilterPubType) =>{
+    console.log(filterResults)
+    const formResultList = pubsList.filter(
+      (filterItem) =>
+        (filterResults.name !== "" && filterItem.name === filterResults.name) ||
+        (filterResults.rating !== 0 && calculateAvgRating(filterItem.ratings) >= filterResults.rating) ||
+        (filterResults.drink !== "" &&
+          menuContainsDrink(filterItem.menu, filterResults.drink)))
+    setFilterPubsList(formResultList)
+    handleShowFilter()
   }
 
   const onDeleteClick = (id: string) => {
     axios
-      .delete("http://localhost:5000/ingredients/" + id)
+      .delete("http://localhost:5000/pubs/" + id)
       .then((res) => console.log(res.data))
 
       let newList = filterPubsList.filter((item) => item._id !== id)
@@ -118,7 +137,7 @@ const PubPanel = (props: PubPanelProps) => {
           )}
         </Stack>
         <br />
-        {showFilter && <div></div>}
+        {showFilter && <PubFilter onFilterSubmit={onFilterSubmit} drinksList={props.drinksList}></PubFilter>}
 
         <Modal show={showForm} onHide={handleCloseForm}>
           <Modal.Header closeButton>

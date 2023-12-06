@@ -32,15 +32,19 @@ type DrinkType = FilterDrinkType & {
 
 type FilterPubType = {
   name: string
+  rating: number
+  drink: string
+  openNow: boolean
+}
+
+type PubType = {
+  _id: string
+  name: string
   address: string
   location: number[]
   ratings: number[]
   menu: MenuItem[]
   opentime: OpeningTime[]
-}
-
-type PubType = FilterPubType & {
-  _id: string
   
 }
 
@@ -101,13 +105,16 @@ const calculateAvgRating = (ratingArray: number[]) => {
   
 }
 const generateStarsArray = (rating: number) => {
-  console.log(rating)
   let starsArray = []
   for (let i = 0; i < 5; i++) {
     if (i <= rating) starsArray.push(fullStar)
     else starsArray.push(emptyStar)
   }
   return starsArray
+}
+
+const menuContainsDrink = (menu: MenuItem[], drink: string):boolean => {
+  return menu.some((item) => item.name.toLowerCase() === drink.toLowerCase())
 }
 
 export type {
@@ -135,5 +142,6 @@ export {
   checkIfOpen,
   formatDayFromDate,
   generateStarsArray,
-  calculateAvgRating
+  calculateAvgRating,
+  menuContainsDrink
 }
