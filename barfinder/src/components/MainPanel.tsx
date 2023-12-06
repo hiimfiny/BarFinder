@@ -30,7 +30,7 @@ const Panel = () => {
   const [favouritedPubs, setFavouritedPubs] = useState([""])
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
-  
+
   const [userStatus, setUserStatus] = useState(true)
 
   const onClick = (text: string) => {
@@ -109,6 +109,8 @@ const Panel = () => {
         {menuButtons.map((menuButton) => {
           return (
             <TabButton
+              selected={panel}
+              buttonName={menuButton}
               onButtonClick={() => {
                 onClick(menuButton)
               }}

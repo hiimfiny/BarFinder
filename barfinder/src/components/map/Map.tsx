@@ -50,7 +50,14 @@ const Map = (props: MapProps) => {
       <div>
         <MapFilter></MapFilter>
       </div>
-      <Container style={{ border: "1px solid black", padding: "2px" }}>
+      <Container
+        style={{
+          border: "1px solid black",
+          borderRadius: "10px",
+          padding: "2px",
+        }}
+        className="panel"
+      >
         <Row>
           <Col lg={sidePanel ? 9 : 12}>
             <GoogleMap
@@ -72,7 +79,7 @@ const Map = (props: MapProps) => {
             </GoogleMap>
           </Col>
           {sidePanel && (
-            <Col lg={3}>
+            <Col lg={3} className="nopadding">
               <MapSidePanel
                 pub={selectedPub}
                 setSidePanel={setSidePanel}

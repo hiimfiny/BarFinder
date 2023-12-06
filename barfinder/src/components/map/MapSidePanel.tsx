@@ -43,7 +43,7 @@ const MapSidePanel = (props: MapSidePanelProps) => {
     currentDate = new Date()
   }, [])
   return (
-    <div>
+    <div className="panel" style={{ background: "#fef6c9" }}>
       <Stack
         direction="horizontal"
         gap={3}

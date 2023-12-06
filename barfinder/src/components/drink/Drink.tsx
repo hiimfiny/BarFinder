@@ -33,10 +33,10 @@ const Drink = (props: DrinkProps) => {
     handleCloseEdit()
   }
   return (
-    <Card bg="secondary" style={{ width: "20rem", margin: "auto" }}>
+    <Card style={{ width: "20rem", margin: "auto" }}>
       <Card.Body>
         <Card.Title>{props.name}</Card.Title>
-        <Stack direction="horizontal" gap={3}>
+        <div className="d-flex justify-content-between">
           <div className="p-2">
             <Image
               src={
@@ -47,7 +47,7 @@ const Drink = (props: DrinkProps) => {
               style={{ width: "60px", height: "60px" }}
             />
           </div>
-          <div className="p-2 ms-auto">
+          <Stack direction="horizontal" gap={1}>
             <Button
               onClick={() => {
                 props.onFavouriteClick(props._id)
@@ -69,8 +69,8 @@ const Drink = (props: DrinkProps) => {
                 <FontAwesomeIcon icon={faTimes} />
               </Button>
             )}
-          </div>
-        </Stack>
+          </Stack>
+        </div>
         <p>{props.ingredients.join(", ")}</p>
         <Modal show={showEdit} onHide={handleCloseEdit}>
           <Modal.Header closeButton>

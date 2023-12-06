@@ -1,6 +1,10 @@
 import React, { useState, SyntheticEvent } from "react"
 import { Form, Stack, Button, FloatingLabel } from "react-bootstrap"
-import { FilterIngredientType,ingredientTypeArray, ingredientOrderTypes } from "../Types"
+import {
+  FilterIngredientType,
+  ingredientTypeArray,
+  ingredientOrderTypes,
+} from "../Types"
 
 type ingredientFilterProps = {
   onFilterSubmit: (formResults: FilterIngredientType) => void
@@ -11,7 +15,7 @@ const IngredientFilter = (props: ingredientFilterProps) => {
   const [filterName, setfilterName] = useState("")
   const [filterAbv, setfilterAbv] = useState("")
   const [filterType, setfilterType] = useState("")
-  
+
   const onFilterSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
 
@@ -33,15 +37,18 @@ const IngredientFilter = (props: ingredientFilterProps) => {
         <FloatingLabel
           controlId="floatingOrderInput"
           label="Order"
-          className="mb-3"
+          className="mb-3 floating-label"
         >
-        <Form.Select onChange={(e)=>{props.onOrderSubmit(e.target.value.toString())}}>
-            
+          <Form.Select
+            onChange={(e) => {
+              props.onOrderSubmit(e.target.value.toString())
+            }}
+          >
             {ingredientOrderTypes.map((order) => (
-            <option value={order}>{order}</option>
-          ))}
+              <option value={order}>{order}</option>
+            ))}
           </Form.Select>
-          </FloatingLabel>
+        </FloatingLabel>
         <FloatingLabel
           controlId="floatingNameInput"
           label="Name"
@@ -72,8 +79,8 @@ const IngredientFilter = (props: ingredientFilterProps) => {
           <Form.Select onChange={(e) => setfilterType(e.target.value)}>
             <option></option>
             {ingredientTypeArray.map((type) => (
-            <option value={type}>{type}</option>
-          ))}
+              <option value={type}>{type}</option>
+            ))}
           </Form.Select>
         </FloatingLabel>
 

@@ -53,12 +53,14 @@ const Pub = (props: PubProps) => {
     props.onRateClick([...ratingArray, rating], props._id)
   }
   return (
-    <Card bg="secondary" style={{ width: "30rem", margin: "auto" }}>
+    <Card style={{ width: "30rem", margin: "auto" }}>
       <Card.Body>
         <Card.Title>{props.name}</Card.Title>
-        <Stack direction="horizontal" gap={3}>
-          <div>{ratingArray.length === 0 ? "No rating yet" :avgRating + "/5"}</div>
-          <div className="p-2 ms-auto">
+        <div className="d-flex justify-content-between">
+          <div>
+            {ratingArray.length === 0 ? "No rating yet" : avgRating + "/5"}
+          </div>
+          <Stack direction="horizontal" gap={1}>
             <Button
               onClick={() => {
                 props.onFavouriteClick(props._id)
@@ -67,8 +69,12 @@ const Pub = (props: PubProps) => {
               {props.isFavourited ? fullStar : emptyStar}
             </Button>
             <Button
-            onClick={()=>{handleShowRating()}}
-            >Rate</Button>
+              onClick={() => {
+                handleShowRating()
+              }}
+            >
+              Rate
+            </Button>
             {props.adminUser && (
               <Button
                 onClick={() => {
@@ -89,8 +95,8 @@ const Pub = (props: PubProps) => {
                 <FontAwesomeIcon icon={faTimes} />
               </Button>
             )}
-          </div>
-        </Stack>
+          </Stack>
+        </div>
         <Modal show={showEdit} onHide={handleCloseEdit}>
           <Modal.Header closeButton>
             <Modal.Title>Edit ingredient</Modal.Title>
@@ -112,9 +118,8 @@ const Pub = (props: PubProps) => {
             <Modal.Title>Give a rating</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-
             <PubRatingModal onRateClick={onRateClick}></PubRatingModal>
-          </Modal.Body> 
+          </Modal.Body>
         </Modal>
       </Card.Body>
     </Card>

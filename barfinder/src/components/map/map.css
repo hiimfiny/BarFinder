@@ -1,16 +1,15 @@
-.map{
-    width: 100%;
-    height: 60vh;
+.map {
+  width: 100%;
+  height: 60vh;
+  border-radius: 10px;
 }
-.map-sidebar{
-    width: 20%;
-    height: 60vh
+.map-sidebar {
+  width: 20%;
+  height: 60vh;
 }
 
-.map-container{
-
-    height: 50vh;
-    background-color: gray;
-    display: flex;
-
+.map-container {
+  height: 50vh;
+  background-color: gray;
+  display: flex;
 }

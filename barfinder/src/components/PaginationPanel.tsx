@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react"
 import { Pagination } from "react-bootstrap"
-
+import "../index.css"
 type PaginationProps = {
   currentPage: number
   totalElements: number
@@ -53,6 +53,7 @@ const PaginationPanel = (props: PaginationProps) => {
           key={i}
           active={i === currentPage}
           onClick={() => onPageClick(i)}
+          style={{backgroundColor: "#3e505b"}}
         >
           {i}
         </Pagination.Item>

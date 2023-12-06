@@ -32,14 +32,16 @@ const Ingredient = (props: IngredientProps) => {
     handleCloseEdit()
   }
   return (
-    <Card bg="secondary" style={{ width: "18rem", margin: "auto" }}>
+    <Card style={{ width: "18rem", margin: "auto" }} className="card">
       <Card.Body>
         <Card.Title>{props.name}</Card.Title>
-        <Stack direction="horizontal" gap={3}>
+        <div className="d-flex justify-content-between">
           <div className="p-2">
-            <Card.Text>{props.type +  (props.abv === 0 ? " " :  (" (" +props.abv+ "%)")) }</Card.Text>
+            <Card.Text>
+              {props.type + (props.abv === 0 ? " " : " (" + props.abv + "%)")}
+            </Card.Text>
           </div>
-          <div className="p-2 ms-auto">
+          <Stack direction="horizontal" gap={1}>
             <Button
               onClick={() => {
                 props.onFavouriteClick(props._id)
@@ -61,8 +63,8 @@ const Ingredient = (props: IngredientProps) => {
                 <FontAwesomeIcon icon={faTimes} />
               </Button>
             )}
-          </div>
-        </Stack>
+          </Stack>
+        </div>
         <Modal show={showEdit} onHide={handleCloseEdit}>
           <Modal.Header closeButton>
             <Modal.Title>Edit ingredient</Modal.Title>

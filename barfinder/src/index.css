@@ -9,21 +9,71 @@ body {
   align-items: center;
   display: flex;
   flex: 1 1 0%;
-  background-color: #f4f4f4;
+  background-color: #d4dfc7 !important;
   /* background-color: #5ea8a2;
 background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
 This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-
-
 }
-
-.panel{
-  border: 1px solid gray ;
-  border-radius: 10px;
+/* #8ab0ab
+  #3e505b
+  #26413c
+  #1a1d1a
+  #03120e */
+#725752 /* Buttons*/
+  #878e88 /* Buttons*/
+  #96c0b7 /* Panel*/
+  #d4dfc7 /* Background*/
+  #fef6c9 /* Cards*/
+  .pagination_button {
+  background-color: #3e505b !important;
+}
+.panel {
+  border: 1px solid gray;
+  border-radius: 15px;
   padding: 5px;
+  background-color: #96c0b7;
+}
+.card {
+  background-color: #fef6c9 !important;
+  border-radius: 10px;
+}
+.card-body {
+  background-color: #fef6c9;
+
+  border-radius: 10px;
+  color: white;
+}
+.modal-content {
+  background-color: #878e88 !important;
+}
+.form-control {
+  background-color: #d4dfc7 !important;
+}
+.form-select {
+  background-color: #d4dfc7 !important;
 }
 
-.centered-panel-element{
+label::after {
+  background-color: #d4dfc7 !important;
+}
+
+.btn {
+  --bs-btn-bg: white;
+  background-color: #725752 !important;
+  border: 1px solid #725752 !important;
+  border-radius: 1px;
+  padding: 1px;
+}
+.page-link {
+  background-color: #3e505b !important;
+  border: none !important;
+  color: white !important;
+}
+.page-item.active > .page-link {
+  background-color: #725752 !important;
+}
+
+.centered-panel-element {
   display: flex;
   justify-content: center;
   margin-top: 10px;
@@ -59,8 +109,8 @@ code {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
-  background-color: transparent;
-  color: #a18aba;
+  background-color: #fef6c9;
+  color: #6929ad;
   font-family: "Roboto Condensed", sans-serif;
   font-size: 1rem;
   cursor: pointer;
