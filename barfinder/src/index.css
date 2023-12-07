@@ -78,6 +78,12 @@ label::after {
   justify-content: center;
   margin-top: 10px;
 }
+.table td {
+  background-color: #d4dfc7 !important;
+}
+.table th {
+  background-color: #3e505b !important;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
