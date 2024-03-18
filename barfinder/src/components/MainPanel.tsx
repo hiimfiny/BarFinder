@@ -33,19 +33,18 @@ const Panel = () => {
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
 
   const [userID, setUserID] = useState("")
-
-  const onClick = (text: string) => {
-    console.log(text)
-    if (text != "Login") setPanel(text)
-    if (text === "Login") handleShow()
-  }
-  const menuButtons: string[] = [
+  const [menuButtons, setMenuButtons] = useState([
     "Drinks",
     "Ingredients",
     "Pubs",
     "Map",
     "Login",
-  ]
+  ])
+  const onClick = (text: string) => {
+    console.log(text)
+    if (text != "Login") setPanel(text)
+    if (text === "Login") handleShow()
+  }
 
   const changeIngredients = (array: typeof defaultIngredients) => {
     setIngredientsList(array)
@@ -84,6 +83,9 @@ const Panel = () => {
     getIdFromUserId(user_id)
     getFavouritedLists()
     setPanel("User")
+    const updatedButtons = [...menuButtons]
+    updatedButtons[menuButtons.length - 1] = "User"
+    setMenuButtons(updatedButtons)
     handleClose()
   }
 
@@ -149,6 +151,7 @@ const Panel = () => {
           adminUser={true}
           IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
+          user_id={userID}
         />
       )}
       {panel === "Ingredients" && (
@@ -159,6 +162,7 @@ const Panel = () => {
           //TODO!
           adminUser={true}
           changeFavourite={changeFavouriteList}
+          user_id={userID}
         />
       )}
       {panel === "Pubs" && (
@@ -171,6 +175,7 @@ const Panel = () => {
           IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
           drinksList={DrinksList}
+          user_id={userID}
         />
       )}
       {panel === "Map" && <Map pubsList={pubsList} />}

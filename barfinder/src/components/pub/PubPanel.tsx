@@ -2,7 +2,14 @@ import React, { useState } from "react"
 import { Button, Modal, Stack } from "react-bootstrap"
 import PaginationPanel from "../PaginationPanel"
 
-import { PubType, FilterPubType, defaultOpeningTime, DrinkType, calculateAvgRating,menuContainsDrink } from "../Types"
+import {
+  PubType,
+  FilterPubType,
+  defaultOpeningTime,
+  DrinkType,
+  calculateAvgRating,
+  menuContainsDrink,
+} from "../Types"
 import Pub from "./Pub"
 import PubFilter from "./PubFilter"
 import PubForm from "./PubForm"
@@ -15,6 +22,7 @@ type PubPanelProps = {
   IngredientList: string[]
   changeFavourite: (list: string, array: string[]) => void
   drinksList: DrinkType[]
+  user_id: string
 }
 
 const PubPanel = (props: PubPanelProps) => {
@@ -36,8 +44,6 @@ const PubPanel = (props: PubPanelProps) => {
 
   const handleShowFilter = () => setShowFilter(!showFilter)
 
-
-
   const handleSelectPage = (selected_number: number) => {
     setPageNumber(selected_number)
   }
@@ -55,12 +61,9 @@ const PubPanel = (props: PubPanelProps) => {
     setFavouritedByUser(array)
     props.changeFavourite("pub", array)
     axios
-      .post(
-        "http://localhost:5000/users/update-pubs/6569189fa362f81f37d14e72",
-        {
-          favouritedArray: array,
-        }
-      )
+      .post(`http://localhost:5000/users/update-pubs/${props.user_id}`, {
+        favouritedArray: array,
+      })
       .then((res) => console.log(res.data))
   }
 
@@ -76,12 +79,13 @@ const PubPanel = (props: PubPanelProps) => {
   }
 
   const onEditClick = (formResults: PubType) => {
-    axios.post("http://localhost:5000/pubs/update/" + formResults._id, formResults)
-    .then((res) => console.log(res.data))
+    axios
+      .post("http://localhost:5000/pubs/update/" + formResults._id, formResults)
+      .then((res) => console.log(res.data))
 
     const updatedPubs = pubsList.map((item) => {
-      if(item._id === formResults._id){
-        return {...item, ...formResults}
+      if (item._id === formResults._id) {
+        return { ...item, ...formResults }
       }
       return item
     })
@@ -90,14 +94,16 @@ const PubPanel = (props: PubPanelProps) => {
     setFilterPubsList(updatedPubs)
   }
 
-  const onFilterSubmit = (filterResults: FilterPubType) =>{
+  const onFilterSubmit = (filterResults: FilterPubType) => {
     console.log(filterResults)
     const formResultList = pubsList.filter(
       (filterItem) =>
         (filterResults.name !== "" && filterItem.name === filterResults.name) ||
-        (filterResults.rating !== 0 && calculateAvgRating(filterItem.ratings) >= filterResults.rating) ||
+        (filterResults.rating !== 0 &&
+          calculateAvgRating(filterItem.ratings) >= filterResults.rating) ||
         (filterResults.drink !== "" &&
-          menuContainsDrink(filterItem.menu, filterResults.drink)))
+          menuContainsDrink(filterItem.menu, filterResults.drink))
+    )
     setFilterPubsList(formResultList)
     handleShowFilter()
   }
@@ -107,13 +113,14 @@ const PubPanel = (props: PubPanelProps) => {
       .delete("http://localhost:5000/pubs/" + id)
       .then((res) => console.log(res.data))
 
-      let newList = filterPubsList.filter((item) => item._id !== id)
-      setFilterPubsList(newList)
-      props.changePubs(newList)
+    let newList = filterPubsList.filter((item) => item._id !== id)
+    setFilterPubsList(newList)
+    props.changePubs(newList)
   }
   const onRateClick = (ratings: number[], id: string) => {
-    axios.post("http://localhost:5000/pubs/update-rating/" + id, ratings)
-    .then((res) => console.log(res.data))
+    axios
+      .post("http://localhost:5000/pubs/update-rating/" + id, ratings)
+      .then((res) => console.log(res.data))
   }
 
   return (
@@ -137,7 +144,12 @@ const PubPanel = (props: PubPanelProps) => {
           )}
         </Stack>
         <br />
-        {showFilter && <PubFilter onFilterSubmit={onFilterSubmit} drinksList={props.drinksList}></PubFilter>}
+        {showFilter && (
+          <PubFilter
+            onFilterSubmit={onFilterSubmit}
+            drinksList={props.drinksList}
+          ></PubFilter>
+        )}
 
         <Modal show={showForm} onHide={handleCloseForm}>
           <Modal.Header closeButton>
@@ -155,7 +167,6 @@ const PubPanel = (props: PubPanelProps) => {
             ></PubForm>
           </Modal.Body>
         </Modal>
-        
       </div>
       <div>
         {filterPubsList.length === 0 ? (

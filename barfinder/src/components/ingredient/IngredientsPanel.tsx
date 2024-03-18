@@ -16,6 +16,7 @@ type IngredientsPanelProps = {
   changeIngredients: (array: IngredientType[]) => void
   adminUser: boolean
   changeFavourite: (list: string, array: string[]) => void
+  user_id: string
 }
 
 const IngredientsPanel = (props: IngredientsPanelProps) => {
@@ -50,12 +51,9 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
     setFavouritedByUser(array)
     props.changeFavourite("ingredient", array)
     axios
-      .post(
-        "http://localhost:5000/users/update-ingredients/6569189fa362f81f37d14e72",
-        {
-          favouritedArray: array,
-        }
-      )
+      .post(`http://localhost:5000/users/update-ingredients/${props.user_id}`, {
+        favouritedArray: array,
+      })
       .then((res) => console.log(res.data))
   }
 
@@ -138,31 +136,31 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
       }
       case "ABC^": {
         sortedList = FilteredIngredientsList.slice().sort((a, b) => {
-          const nameA = a.name.toUpperCase() 
+          const nameA = a.name.toUpperCase()
           const nameB = b.name.toUpperCase()
 
           if (nameA < nameB) {
-            return -1 
+            return -1
           }
           if (nameA > nameB) {
-            return 1 
+            return 1
           }
-          return 0 
+          return 0
         })
         break
       }
       case "ABCv": {
         sortedList = FilteredIngredientsList.slice().sort((a, b) => {
-          const nameA = a.name.toUpperCase() 
+          const nameA = a.name.toUpperCase()
           const nameB = b.name.toUpperCase()
 
           if (nameB < nameA) {
-            return -1 
+            return -1
           }
           if (nameB > nameA) {
-            return 1 
+            return 1
           }
-          return 0 
+          return 0
         })
         break
       }

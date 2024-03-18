@@ -13,6 +13,7 @@ type DrinkPanelProps = {
   adminUser: boolean
   IngredientList: string[]
   changeFavourite: (list: string, array: string[]) => void
+  user_id: string
 }
 
 const DrinkPanel = (props: DrinkPanelProps) => {
@@ -51,12 +52,9 @@ const DrinkPanel = (props: DrinkPanelProps) => {
     setFavouritedByUser(array)
     props.changeFavourite("drink", array)
     axios
-      .post(
-        "http://localhost:5000/users/update-drinks/6569189fa362f81f37d14e72",
-        {
-          favouritedArray: array,
-        }
-      )
+      .post(`http://localhost:5000/users/update-drinks/${props.user_id}`, {
+        favouritedArray: array,
+      })
       .then((res) => console.log(res.data))
   }
 
