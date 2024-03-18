@@ -2,6 +2,7 @@
 
 # dependencies
 /barfinder/node_modules
+/barfinder-server/node_modules
 /.pnp
 .pnp.js
 

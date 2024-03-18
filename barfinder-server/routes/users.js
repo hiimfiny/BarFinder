@@ -8,10 +8,14 @@ router.route("/").get((req, res) => {
 })
 
 router.route("/add").post((req, res) => {
+  console.log("in users/add")
   const newUser = new Users({
+    email: req.body.email,
+    firebaseUserId: req.body.firebase_user_id,
+    username: "",
     favouritedIngredients: [],
     favouritedDrinks: [],
-    favouritedPubs: []
+    favouritedPubs: [],
   })
 
   newUser
@@ -21,8 +25,22 @@ router.route("/add").post((req, res) => {
 })
 
 router.route("/:id").get((req, res) => {
+  console.log("in server /:id")
+  console.log(req.params.id)
   Users.findById(req.params.id)
-    .then((user) => res.json(user))
+    .then((user) => {
+      console.log(user)
+      res.json({
+        favouritedIngredients: user.favouritedIngredients,
+        favouritedDrinks: user.favouritedDrinks,
+        favouritedPubs: user.favouritedPubs,
+      })
+    })
+    .catch((err) => res.status(400).json("Error " + err))
+})
+router.route("/getByFirebaseId/:id").get((req, res) => {
+  Users.findOne({ firebaseUserId: req.params.id })
+    .then((user) => res.json(user._id))
     .catch((err) => res.status(400).json("Error " + err))
 })
 

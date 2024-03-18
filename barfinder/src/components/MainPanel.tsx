@@ -8,6 +8,7 @@ import IngredientsPanel from "./ingredient/IngredientsPanel"
 import PubPanel from "./pub/PubPanel"
 import { IngredientType, DrinkType, PubType } from "./Types"
 import axios from "axios"
+import UserPanel from "./user/UserPanel"
 
 const Panel = () => {
   const [panel, setPanel] = useState("...")
@@ -31,7 +32,7 @@ const Panel = () => {
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
 
-  const [userStatus, setUserStatus] = useState(true)
+  const [userID, setUserID] = useState("")
 
   const onClick = (text: string) => {
     console.log(text)
@@ -62,7 +63,32 @@ const Panel = () => {
     if (list === "pub") setFavouritedPubs(array)
   }
 
+  const getIdFromUserId = (user_id: string) => {
+    axios
+      .get(`http://localhost:5000/users/getByFirebaseId/${user_id}`)
+      .then((res) => {
+        setUserID(res.data)
+      })
+  }
+  const getFavouritedLists = () => {
+    console.log(userID)
+    axios.get(`http://localhost:5000/users/${userID}`).then((res) => {
+      console.log(res.data)
+      setFavouritedIngredients(res.data.favouritedIngredients)
+      setFavouritedDrinks(res.data.favouritedDrinks)
+      setFavouritedPubs(res.data.favouritedPubs)
+    })
+  }
+
+  const onLoginClick = (user_id: string) => {
+    getIdFromUserId(user_id)
+    getFavouritedLists()
+    setPanel("User")
+    handleClose()
+  }
+
   useEffect(() => {
+    getFavouritedLists()
     axios
       .get("http://localhost:5000/ingredients/")
       .then((res) => {
@@ -76,15 +102,6 @@ const Panel = () => {
         setIngredientsStringList(ingredientsForDrinksArray)
       })
       .catch((error) => console.log(error))
-
-    axios
-      .get("http://localhost:5000/users/6569189fa362f81f37d14e72")
-      .then((res) => {
-        console.log(res.data)
-        setFavouritedIngredients(res.data.favouritedIngredients)
-        setFavouritedDrinks(res.data.favouritedDrinks)
-        setFavouritedPubs(res.data.favouritedPubs)
-      })
 
     axios
       .get("http://localhost:5000/drinks/")
@@ -101,7 +118,7 @@ const Panel = () => {
         setPubsList(res.data)
       })
       .catch((error) => console.log(error))
-  }, [])
+  }, [userID])
 
   return (
     <section id="menus" className="menus">
@@ -121,14 +138,15 @@ const Panel = () => {
         })}
       </menu>
       <Modal show={showLogin} onHide={handleClose}>
-        <LoginPanel></LoginPanel>
+        <LoginPanel onLoginClick={onLoginClick}></LoginPanel>
       </Modal>
       {panel === "Drinks" && (
         <DrinkPanel
           DrinksList={DrinksList}
           favouritedByUser={favouritedDrinks}
           changeDrinks={changeDrinks}
-          adminUser={userStatus}
+          //TODO!
+          adminUser={true}
           IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
         />
@@ -138,7 +156,8 @@ const Panel = () => {
           IngredientsList={IngredientsList}
           favouritedByUser={favouritedIngredients}
           changeIngredients={changeIngredients}
-          adminUser={userStatus}
+          //TODO!
+          adminUser={true}
           changeFavourite={changeFavouriteList}
         />
       )}
@@ -147,13 +166,15 @@ const Panel = () => {
           pubsList={pubsList}
           favouritedByUser={favouritedPubs}
           changePubs={changePubs}
-          adminUser={userStatus}
+          //TODO!
+          adminUser={true}
           IngredientList={ingredientsStringList}
           changeFavourite={changeFavouriteList}
           drinksList={DrinksList}
         />
       )}
       {panel === "Map" && <Map pubsList={pubsList} />}
+      {panel === "User" && <UserPanel userId={userID} />}
     </section>
   )
 }

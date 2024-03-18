@@ -1,15 +1,32 @@
 import React, { useRef } from "react"
 import "./login.css"
-
-const Login = (props: { onSwitchLoginState: () => void }) => {
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "./firebase_config.js"
+const Login = (props: {
+  onSwitchLoginState: () => void
+  onLoginClick: (user_id: string) => void
+}) => {
   const usernameInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault()
-    console.log(usernameInputRef.current?.value)
+    login()
     usernameInputRef.current!.value = ""
     passwordInputRef.current!.value = ""
+  }
+
+  const login = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        usernameInputRef.current!.value,
+        passwordInputRef.current!.value
+      )
+      props.onLoginClick(user.user.uid)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -22,7 +39,7 @@ const Login = (props: { onSwitchLoginState: () => void }) => {
       <div className="button-container">
         <button className="submit">Log in</button>
         <button className="switch" onClick={props.onSwitchLoginState}>
-          Swtich to Register
+          Switch to Register
         </button>
       </div>
     </form>

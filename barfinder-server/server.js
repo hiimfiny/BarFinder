@@ -19,15 +19,15 @@ connection.once("open", () => {
   console.log("MongoDB database connection successful")
 })
 
-const ingredientsRouter = require('./routes/ingredients')
-const usersRouter = require('./routes/users')
-const drinksRouter = require('./routes/drinks')
-const pubsRouter = require('./routes/pubs')
+const ingredientsRouter = require("./routes/ingredients")
+const usersRouter = require("./routes/users")
+const drinksRouter = require("./routes/drinks")
+const pubsRouter = require("./routes/pubs")
 
-app.use('/ingredients', ingredientsRouter)
-app.use('/users', usersRouter)
-app.use('/drinks', drinksRouter)
-app.use('/pubs', pubsRouter)
+app.use("/ingredients", ingredientsRouter)
+app.use("/drinks", drinksRouter)
+app.use("/pubs", pubsRouter)
+app.use("/users", usersRouter)
 
 app.listen(5000, () => {
   console.log("Server running on port " + port)

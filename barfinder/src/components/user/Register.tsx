@@ -1,15 +1,37 @@
 import React, { useRef } from "react"
-
-const Register = (props: { onSwitchLoginState: () => void }) => {
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { auth } from "./firebase_config.js"
+const Register = (props: {
+  onSwitchLoginState: () => void
+  onRegister: (email: string, firebase_user_id: string) => void
+}) => {
   const usernameInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault()
+    register()
+
     console.log(usernameInputRef.current?.value)
-    usernameInputRef.current!.value = ""
-    passwordInputRef.current!.value = ""
+    //usernameInputRef.current!.value = ""
+    //passwordInputRef.current!.value = ""
     props.onSwitchLoginState()
+  }
+
+  const register = async () => {
+    const email = usernameInputRef.current!.value
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        usernameInputRef.current!.value,
+        passwordInputRef.current!.value
+      )
+
+      console.log(user)
+      props.onRegister(email, user.user.uid)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
