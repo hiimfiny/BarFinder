@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 
 import { useLoadScript, GoogleMap, MarkerF } from "@react-google-maps/api"
 import { Card, Row, Col, Container, Button } from "react-bootstrap"
@@ -12,16 +12,17 @@ type LatLngLiteral = google.maps.LatLngLiteral
 
 type MapProps = {
   pubsList: PubType[]
+  selectedPubId: string
 }
 
 const Map = (props: MapProps) => {
   const [pubsList, setPubsList] = useState(props.pubsList)
   const [selectedPub, setSelectedPub] = useState(props.pubsList.at(0))
-
+  const [selectedPubId, setSelectedPubId] = useState(props.selectedPubId)
   const [sidePanel, setSidePanel] = useState(false)
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyA8Q5IvOIuWGKHgc2hURRzeYSgggxnP5wg",
+    googleMapsApiKey: "AIzaSyA4wee16I0sn4X5QpvzgkutW8XscZviJhE",
   })
 
   const center = useMemo<LatLngLiteral>(
@@ -43,6 +44,17 @@ const Map = (props: MapProps) => {
     setSelectedPub(pub)
     setSidePanel(true)
   }
+
+  useEffect(() => {
+    if (props.selectedPubId !== "") {
+      selectPub(
+        props.pubsList.find((pub) => pub._id === props.selectedPubId) as PubType
+      )
+      setSelectedPubId("")
+    } else {
+      setSidePanel(false)
+    }
+  }, [selectedPubId])
 
   if (!isLoaded) return <div>Loading...</div>
   return (

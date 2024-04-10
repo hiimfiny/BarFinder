@@ -33,6 +33,7 @@ const Panel = () => {
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
 
   const [userID, setUserID] = useState("")
+  const [selectedPubId, setSelectedPubId] = useState("")
   const [menuButtons, setMenuButtons] = useState([
     "Drinks",
     "Ingredients",
@@ -87,6 +88,12 @@ const Panel = () => {
     updatedButtons[menuButtons.length - 1] = "User"
     setMenuButtons(updatedButtons)
     handleClose()
+  }
+
+  const onLocationPinClick = (pubId: string) => {
+    console.log(pubId)
+    setSelectedPubId(pubId)
+    setPanel("Map")
   }
 
   useEffect(() => {
@@ -170,6 +177,7 @@ const Panel = () => {
           pubsList={pubsList}
           favouritedByUser={favouritedPubs}
           changePubs={changePubs}
+          onLocationPinClick={onLocationPinClick}
           //TODO!
           adminUser={true}
           IngredientList={ingredientsStringList}
@@ -178,7 +186,9 @@ const Panel = () => {
           user_id={userID}
         />
       )}
-      {panel === "Map" && <Map pubsList={pubsList} />}
+      {panel === "Map" && (
+        <Map pubsList={pubsList} selectedPubId={selectedPubId} />
+      )}
       {panel === "User" && <UserPanel userId={userID} />}
     </section>
   )

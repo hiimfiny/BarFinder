@@ -18,6 +18,7 @@ type PubPanelProps = {
   pubsList: PubType[]
   favouritedByUser: string[]
   changePubs: (array: PubType[]) => void
+  onLocationPinClick: (pubId: string) => void
   adminUser: boolean
   IngredientList: string[]
   changeFavourite: (list: string, array: string[]) => void
@@ -49,6 +50,10 @@ const PubPanel = (props: PubPanelProps) => {
   }
   const clearFilter = () => {
     setFilterPubsList(pubsList)
+  }
+
+  const onLocationPinClick = (pubId: string) => {
+    console.log(pubId)
   }
 
   const onFavouriteClick = (id: string) => {
@@ -194,6 +199,7 @@ const PubPanel = (props: PubPanelProps) => {
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
                       onRateClick={onRateClick}
+                      onLocationPinClick={props.onLocationPinClick}
                       isFavourited={favouritedByUser.includes(item._id)}
                       adminUser={props.adminUser}
                       ingredientsList={props.IngredientList}

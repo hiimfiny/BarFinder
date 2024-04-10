@@ -3,19 +3,24 @@ import React, { useState } from "react"
 import { Card, Button, Stack, Modal, Image } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons"
+import {
+  faLocationDot,
+  faPen,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { PubType, FilterPubType, emptyStar, fullStar } from "../Types"
 import { checkOpened } from "../Functions"
 import PubForm from "./PubForm"
 import PubRatingModal from "./PubRatingModal"
-library.add(faPen, faTimes)
+library.add(faPen, faTimes, faLocationDot)
 
 type PubProps = PubType & {
   onFavouriteClick: (id: string) => void
   onEditClick: (formResult: PubType) => void
   onDeleteClick: (id: string) => void
   onRateClick: (ratings: number[], id: string) => void
+  onLocationPinClick: (pubId: string) => void
   isFavourited: boolean
   adminUser: boolean
   ingredientsList: string[]
@@ -61,6 +66,13 @@ const Pub = (props: PubProps) => {
             {ratingArray.length === 0 ? "No rating yet" : avgRating + "/5"}
           </div>
           <Stack direction="horizontal" gap={1}>
+            <Button
+              onClick={() => {
+                props.onLocationPinClick(props._id)
+              }}
+            >
+              <FontAwesomeIcon icon={faLocationDot} />
+            </Button>
             <Button
               onClick={() => {
                 props.onFavouriteClick(props._id)
