@@ -102,7 +102,7 @@ code {
 #menus h2 {
   text-align: left;
 }
-#menus menu {
+.menus ul {
   margin: 1rem 0;
   padding: 0;
   display: flex;
@@ -111,7 +111,7 @@ code {
   justify-content: center;
 }
 
-#menus menu button {
+.menus button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -123,12 +123,12 @@ code {
   transition: all 0.2s ease-in-out;
 }
 
-#menus menu button:hover {
+.menus button:hover {
   background-color: #1b082f;
   color: #ebe7ef;
 }
 
-#menus menu button.active {
+.menus menu button.active {
   background-color: #7925d3;
   color: #ebe7ef;
 }

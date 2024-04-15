@@ -1,13 +1,29 @@
-import React from "react"
-import { Row, Col, Image, Button } from "react-bootstrap"
+import React, { useState } from "react"
+import { Row, Col, Image, Button, Modal } from "react-bootstrap"
+import LoginPanel from "./LoginPanel"
 
 type UserPanelProps = {
   userId: string
+  onLoginClick: (user_id: string) => void
 }
 
 const UserPanel = (props: UserPanelProps) => {
+  const [showLogin, setShowLogin] = useState(false)
+
+  const handleClose = () => setShowLogin(false)
+  const handleShow = () => setShowLogin(true)
   return (
     <div className="panel">
+      <Modal show={showLogin} onHide={handleClose}>
+        <LoginPanel onLoginClick={props.onLoginClick}></LoginPanel>
+      </Modal>
+      <Button
+        onClick={() => {
+          handleShow()
+        }}
+      >
+        Log in
+      </Button>
       <Row>
         <Col lg={3} className="profile-col">
           <Row className="profile-picture-container">

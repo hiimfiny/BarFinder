@@ -9,6 +9,8 @@ import PubPanel from "./pub/PubPanel"
 import { IngredientType, DrinkType, PubType } from "./Types"
 import axios from "axios"
 import UserPanel from "./user/UserPanel"
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+import Menu from "./Menu"
 
 const Panel = () => {
   const [panel, setPanel] = useState("...")
@@ -31,8 +33,8 @@ const Panel = () => {
   const [favouritedPubs, setFavouritedPubs] = useState([""])
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
-
-  const [userID, setUserID] = useState("")
+  //TODO: remove default value
+  const [userID, setUserID] = useState("65f8b0a2863e8bc6b24da173")
   const [selectedPubId, setSelectedPubId] = useState("")
   const [menuButtons, setMenuButtons] = useState([
     "Drinks",
@@ -46,7 +48,7 @@ const Panel = () => {
     if (text != "Login") setPanel(text)
     if (text === "Login") handleShow()
   }
-
+  const navigate = useNavigate()
   const changeIngredients = (array: typeof defaultIngredients) => {
     setIngredientsList(array)
   }
@@ -93,7 +95,7 @@ const Panel = () => {
   const onLocationPinClick = (pubId: string) => {
     console.log(pubId)
     setSelectedPubId(pubId)
-    setPanel("Map")
+    navigate("/map")
   }
 
   useEffect(() => {
@@ -130,67 +132,74 @@ const Panel = () => {
   }, [userID])
 
   return (
-    <section id="menus" className="menus">
-      <menu>
-        {menuButtons.map((menuButton) => {
-          return (
-            <TabButton
-              selected={panel}
-              buttonName={menuButton}
-              onButtonClick={() => {
-                onClick(menuButton)
-              }}
-            >
-              {menuButton}
-            </TabButton>
-          )
-        })}
-      </menu>
-      <Modal show={showLogin} onHide={handleClose}>
-        <LoginPanel onLoginClick={onLoginClick}></LoginPanel>
-      </Modal>
-      {panel === "Drinks" && (
-        <DrinkPanel
-          DrinksList={DrinksList}
-          favouritedByUser={favouritedDrinks}
-          changeDrinks={changeDrinks}
-          //TODO!
-          adminUser={true}
-          IngredientList={ingredientsStringList}
-          changeFavourite={changeFavouriteList}
-          user_id={userID}
-        />
-      )}
-      {panel === "Ingredients" && (
-        <IngredientsPanel
-          IngredientsList={IngredientsList}
-          favouritedByUser={favouritedIngredients}
-          changeIngredients={changeIngredients}
-          //TODO!
-          adminUser={true}
-          changeFavourite={changeFavouriteList}
-          user_id={userID}
-        />
-      )}
-      {panel === "Pubs" && (
-        <PubPanel
-          pubsList={pubsList}
-          favouritedByUser={favouritedPubs}
-          changePubs={changePubs}
-          onLocationPinClick={onLocationPinClick}
-          //TODO!
-          adminUser={true}
-          IngredientList={ingredientsStringList}
-          changeFavourite={changeFavouriteList}
-          drinksList={DrinksList}
-          user_id={userID}
-        />
-      )}
-      {panel === "Map" && (
-        <Map pubsList={pubsList} selectedPubId={selectedPubId} />
-      )}
-      {panel === "User" && <UserPanel userId={userID} />}
-    </section>
+    <div>
+      <section id="menus" className="menus">
+        <Modal show={showLogin} onHide={handleClose}>
+          <LoginPanel onLoginClick={onLoginClick}></LoginPanel>
+        </Modal>
+      </section>
+
+      <Routes>
+        <Route path="/" element={<Menu />}>
+          <Route path="/login" element={<div>Login</div>}></Route>
+          <Route path="/register" element={<div>Regsiter</div>}></Route>
+          <Route
+            path="/user"
+            element={<UserPanel userId={userID} onLoginClick={onLoginClick} />}
+          ></Route>
+          <Route
+            path="/ingredients"
+            element={
+              <IngredientsPanel
+                IngredientsList={IngredientsList}
+                favouritedByUser={favouritedIngredients}
+                changeIngredients={changeIngredients}
+                //TODO!
+                adminUser={true}
+                changeFavourite={changeFavouriteList}
+                user_id={userID}
+              />
+            }
+          ></Route>
+          <Route
+            path="/drinks"
+            element={
+              <DrinkPanel
+                DrinksList={DrinksList}
+                favouritedByUser={favouritedDrinks}
+                changeDrinks={changeDrinks}
+                //TODO!
+                adminUser={true}
+                IngredientList={ingredientsStringList}
+                changeFavourite={changeFavouriteList}
+                user_id={userID}
+              />
+            }
+          ></Route>
+          <Route
+            path="/pubs"
+            element={
+              <PubPanel
+                pubsList={pubsList}
+                favouritedByUser={favouritedPubs}
+                changePubs={changePubs}
+                onLocationPinClick={onLocationPinClick}
+                //TODO!
+                adminUser={true}
+                IngredientList={ingredientsStringList}
+                changeFavourite={changeFavouriteList}
+                drinksList={DrinksList}
+                user_id={userID}
+              />
+            }
+          ></Route>
+          <Route
+            path="/map"
+            element={<Map pubsList={pubsList} selectedPubId={selectedPubId} />}
+          ></Route>
+        </Route>
+      </Routes>
+    </div>
   )
 }
 
