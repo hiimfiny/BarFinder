@@ -68,7 +68,6 @@ const Map = (props: MapProps) => {
           borderRadius: "10px",
           padding: "2px",
         }}
-        className="panel"
       >
         <Row>
           <Col lg={sidePanel ? 9 : 12}>

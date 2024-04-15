@@ -133,12 +133,6 @@ const Panel = () => {
 
   return (
     <div>
-      <section id="menus" className="menus">
-        <Modal show={showLogin} onHide={handleClose}>
-          <LoginPanel onLoginClick={onLoginClick}></LoginPanel>
-        </Modal>
-      </section>
-
       <Routes>
         <Route path="/" element={<Menu />}>
           <Route path="/login" element={<div>Login</div>}></Route>

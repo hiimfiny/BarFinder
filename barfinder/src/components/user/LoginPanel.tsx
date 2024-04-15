@@ -3,7 +3,10 @@ import axios from "axios"
 import Login from "./Login"
 import Register from "./Register"
 
-const LoginPanel = (props: { onLoginClick: (user_id: string) => void }) => {
+const LoginPanel = (props: {
+  onLoginClick: (user_id: string) => void
+  onSetLoggedIn: () => void
+}) => {
   const [loginState, setLoginState] = useState("login")
 
   const switchLoginState = () => {
@@ -21,21 +24,17 @@ const LoginPanel = (props: { onLoginClick: (user_id: string) => void }) => {
       .then((res) => console.log(res.data))
   }
 
-  return (
-    <div>
-      {loginState === "login" && (
-        <Login
-          onSwitchLoginState={() => switchLoginState()}
-          onLoginClick={props.onLoginClick}
-        />
-      )}
-      {loginState === "register" && (
-        <Register
-          onSwitchLoginState={() => switchLoginState()}
-          onRegister={register}
-        />
-      )}
-    </div>
+  return loginState === "login" ? (
+    <Login
+      onSwitchLoginState={() => switchLoginState()}
+      onLoginClick={props.onLoginClick}
+      onSetLoggedIn={props.onSetLoggedIn}
+    />
+  ) : (
+    <Register
+      onSwitchLoginState={() => switchLoginState()}
+      onRegister={register}
+    />
   )
 }
 
