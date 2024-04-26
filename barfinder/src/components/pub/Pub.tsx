@@ -9,7 +9,7 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons"
 
-import { PubType, FilterPubType, emptyStar, fullStar } from "../Types"
+import { PubType, emptyStar, fullStar } from "../Types"
 import { checkOpened } from "../Functions"
 import PubForm from "./PubForm"
 import PubRatingModal from "./PubRatingModal"

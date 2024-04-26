@@ -1,12 +1,5 @@
 import React, { useState } from "react"
-import {
-  Form,
-  FloatingLabel,
-  Button,
-  Stack,
-  Modal,
-  Table,
-} from "react-bootstrap"
+import { Form, FloatingLabel, Button, Table } from "react-bootstrap"
 import { OpeningTime } from "../Types"
 
 type PubOpenHoursModalProps = {
@@ -49,27 +42,43 @@ const PubOpenHoursModal = (props: PubOpenHoursModalProps) => {
                   >
                     <Form.Control
                       type="text"
-                      onChange={(e) => updateOpeningTime(item.day,'open',parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateOpeningTime(
+                          item.day,
+                          "open",
+                          parseInt(e.target.value)
+                        )
+                      }
                       defaultValue={item.open === 0 ? "" : item.open}
                     />
                   </FloatingLabel>
                 </td>
-                <td><FloatingLabel
+                <td>
+                  <FloatingLabel
                     controlId="floatingCloseInput"
                     label="Close"
                     className="mb-3"
                   >
                     <Form.Control
                       type="text"
-                      onChange={(e) => updateOpeningTime(item.day,'close',parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateOpeningTime(
+                          item.day,
+                          "close",
+                          parseInt(e.target.value)
+                        )
+                      }
                       defaultValue={item.close === 0 ? "" : item.close}
                     />
-                  </FloatingLabel></td>
+                  </FloatingLabel>
+                </td>
               </tr>
             ))}
           </tbody>
         </Table>
-        <Button variant="primary" onClick={onHourFormSubmit}>Save</Button>
+        <Button variant="primary" onClick={onHourFormSubmit}>
+          Save
+        </Button>
       </Form>
     </div>
   )

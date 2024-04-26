@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react"
-//<{onClick: (text: string) => void }>
 
 type ButtonProps = {
   children: React.ReactNode

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Form, Stack, Button, FloatingLabel, Row, Col } from "react-bootstrap"
+import { Form, Button, FloatingLabel, Row, Col } from "react-bootstrap"
 import { DrinkType, FilterPubType } from "../Types"
 
 type PubFilterProps = {
@@ -20,7 +20,7 @@ const PubFilter = (props: PubFilterProps) => {
       name: filterName,
       rating: filterRating,
       drink: filterDrink,
-      openNow: filterOpenNow
+      openNow: filterOpenNow,
     }
 
     props.onFilterSubmit(filterResult)

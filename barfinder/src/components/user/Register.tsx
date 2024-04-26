@@ -13,8 +13,6 @@ const Register = (props: {
     register()
 
     console.log(usernameInputRef.current?.value)
-    //usernameInputRef.current!.value = ""
-    //passwordInputRef.current!.value = ""
     props.onSwitchLoginState()
   }
 

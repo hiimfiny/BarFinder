@@ -1,18 +1,10 @@
 import React, { useState } from "react"
-import {
-  Form,
-  FloatingLabel,
-  Button,
-  Stack,
-  Modal,
-  Table,
-} from "react-bootstrap"
-import { MenuItem, OpeningTime, PubType } from "../Types"
+import { Form, FloatingLabel, Button, Stack, Table } from "react-bootstrap"
+import { MenuItem } from "../Types"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faPlusCircle, faTimes, faPen } from "@fortawesome/free-solid-svg-icons"
-import { parse } from "path"
 
 library.add(faPlusCircle, faTimes, faPen)
 
@@ -25,7 +17,6 @@ const PubMenuModal = (props: PubMenuModalProps) => {
   const [menuItems, setMenuItems] = useState(props.menu)
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<MenuItem>(defaultMenuItem)
-  const [selectedName, setSelectedName] = useState("")
 
   const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -38,11 +29,9 @@ const PubMenuModal = (props: PubMenuModalProps) => {
     if (field === "price") typedValue = parseInt(value)
     setSelectedMenuItem((prev) => ({ ...prev, [field]: typedValue }))
   }
-  
 
   const addToMenuItems = () => {
     if (selectedMenuItem.name && selectedMenuItem.price !== 0) {
-      // Check if the item already exists in menuItems
       const itemExists = menuItems.some(
         (item) =>
           item.name === selectedMenuItem.name &&
@@ -51,7 +40,7 @@ const PubMenuModal = (props: PubMenuModalProps) => {
 
       if (!itemExists) {
         setMenuItems((prevItems) => [...prevItems, { ...selectedMenuItem }])
-        setSelectedMenuItem(defaultMenuItem) // Reset selectedMenuItem to initial state
+        setSelectedMenuItem(defaultMenuItem)
       } else {
         alert("This item already exists in the menu.")
       }

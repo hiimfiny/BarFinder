@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import { Form, FloatingLabel, Button, Stack, Modal } from "react-bootstrap"
-import { MenuItem, OpeningTime, PubType, defaultOpeningTime } from "../Types"
+import { MenuItem, OpeningTime, PubType } from "../Types"
 import PubMenuModal from "./PubMenuModal"
 import PubOpenHoursModal from "./PubOpenHoursModal"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faPlusCircle, faTimes } from "@fortawesome/free-solid-svg-icons"
 import ObjectId from "bson-objectid"
@@ -59,7 +58,7 @@ const PubForm = (props: PubFormProps) => {
   }
   const onHoursSubmit = (hoursResult: OpeningTime[]) => {
     handleCloseOpenHours()
-    console.log('opening times: ')
+    console.log("opening times: ")
     console.log(hoursResult)
     setFormOpenTime(hoursResult)
   }
@@ -126,12 +125,16 @@ const PubForm = (props: PubFormProps) => {
       <div>
         <Stack direction="horizontal" gap={3}>
           <Button onClick={handleShowMenu}>Edit menu</Button>
-          <Modal show={showMenu} onHide={handleCloseMenu} style={{maxWidth:'none',}}>
+          <Modal
+            show={showMenu}
+            onHide={handleCloseMenu}
+            style={{ maxWidth: "none" }}
+          >
             <Modal.Header closeButton>
               <Modal.Title>Menu</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <PubMenuModal 
+              <PubMenuModal
                 menu={formMenu}
                 onMenuSubmit={onMenuModalSubmit}
               ></PubMenuModal>
@@ -139,14 +142,14 @@ const PubForm = (props: PubFormProps) => {
           </Modal>
 
           <Button onClick={handleShowOpenHours}>Edit open hours</Button>
-          <Modal show={showOpenHours} onHide={handleCloseOpenHours} >
+          <Modal show={showOpenHours} onHide={handleCloseOpenHours}>
             <Modal.Header closeButton>
               <Modal.Title>Add the open time</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <PubOpenHoursModal
-                openHours = {formOpenTime}
-                onHoursSubmit = {onHoursSubmit}
+                openHours={formOpenTime}
+                onHoursSubmit={onHoursSubmit}
               ></PubOpenHoursModal>
             </Modal.Body>
           </Modal>

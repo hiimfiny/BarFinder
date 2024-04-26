@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { Pagination } from "react-bootstrap"
 import "../index.css"
 type PaginationProps = {
@@ -9,7 +9,6 @@ type PaginationProps = {
 }
 
 const PaginationPanel = (props: PaginationProps) => {
-  //const [pageItems, setPageItems] = useState<JSX.Element[]>([])
   const [currentPage, setCurrentPage] = useState(props.currentPage)
 
   const totalPages = Math.ceil(props.totalElements / props.pageSize)
@@ -18,34 +17,33 @@ const PaginationPanel = (props: PaginationProps) => {
     if (page_number > 0 && page_number <= totalPages) {
       setCurrentPage(page_number)
       props.selectPage(page_number)
-      //func(page_number, props.numberOfPages, 5)
     }
   }
 
   const pageItems = useMemo(() => {
-    const maxDisplayedPages = 5; // Maximum number of pages to display
+    const maxDisplayedPages = 5
 
-    let startPage = 1;
-    let endPage = totalPages;
+    let startPage = 1
+    let endPage = totalPages
 
     if (totalPages > maxDisplayedPages) {
-      const middle = Math.ceil(maxDisplayedPages / 2);
+      const middle = Math.ceil(maxDisplayedPages / 2)
       if (currentPage > middle) {
-        startPage = currentPage - (middle - 1);
-        endPage = currentPage + (maxDisplayedPages - middle);
+        startPage = currentPage - (middle - 1)
+        endPage = currentPage + (maxDisplayedPages - middle)
       } else {
-        endPage = maxDisplayedPages;
+        endPage = maxDisplayedPages
       }
     }
 
     if (totalPages <= maxDisplayedPages) {
-      startPage = 1;
-      endPage = totalPages;
+      startPage = 1
+      endPage = totalPages
     }
 
-    endPage = Math.min(endPage, totalPages); // Ensure endPage doesn't exceed total pages
+    endPage = Math.min(endPage, totalPages)
 
-    const items: JSX.Element[] = [];
+    const items: JSX.Element[] = []
 
     for (let i = startPage; i <= endPage; i++) {
       items.push(
@@ -53,15 +51,15 @@ const PaginationPanel = (props: PaginationProps) => {
           key={i}
           active={i === currentPage}
           onClick={() => onPageClick(i)}
-          style={{backgroundColor: "#3e505b"}}
+          style={{ backgroundColor: "#3e505b" }}
         >
           {i}
         </Pagination.Item>
-      );
+      )
     }
 
-    return items;
-  }, [props.totalElements, props.pageSize, currentPage, onPageClick]);
+    return items
+  }, [props.totalElements, props.pageSize, currentPage, onPageClick])
   return (
     <div>
       <Pagination className="centered-panel-element">

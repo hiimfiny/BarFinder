@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Row, Col, Image, Button, Modal } from "react-bootstrap"
+import React, { useState } from "react"
+import { Row, Col, Image, Button } from "react-bootstrap"
 import LoginPanel from "./LoginPanel"
 
 type UserPanelProps = {
@@ -10,9 +10,6 @@ type UserPanelProps = {
 const UserPanel = (props: UserPanelProps) => {
   const [loggedIn, setLoggedIn] = useState(false)
 
-  /*   useEffect(() => {
-    console.log(loggedIn)
-  }, [loggedIn]) */
   return (
     <div className="panel">
       {!loggedIn && (

@@ -9,7 +9,6 @@ import {
   formatDayFromDate,
   generateStarsArray,
   calculateAvgRating,
-  daysOfTheWeek,
 } from "../Types"
 
 import { Button, Stack, Modal, Table } from "react-bootstrap"
