@@ -53,6 +53,12 @@ This is mostly intended for prototyping; please download the pattern and re-host
   background-color: #d4dfc7 !important;
 }
 
+.filter-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 label::after {
   background-color: #d4dfc7 !important;
 }
@@ -156,35 +162,6 @@ code {
   outline: none;
 }
 
-.profile-picture-container {
-  width: 150px !important;
-  height: 150px !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.profile-picture {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-options {
-  border: 1px solid gray;
-  border-radius: 15px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.profile-col {
-  margin-left: 10px;
-}
-
 .login-container {
   background: transparent !important;
   width: 40%;
@@ -203,8 +180,70 @@ code {
   background-color: #725752 !important;
 }
 .pagination-card {
-  background: var(--surface-card);
-  padding: 2rem;
   border-radius: 10px;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+.p-paginator {
+  background: none !important;
+}
+
+.p-highlight,
+.p-paginator-element:hover {
+  border-radius: 50%;
+}
+
+.p-paginator-element {
+  font-weight: 300 !important;
+  color: #725752 !important;
+}
+
+.user-container {
+  height: 80vh;
+  padding: 5px;
+  background-color: #96c0b7;
+  display: flex;
+}
+
+.side-panel {
+  width: 25%;
+}
+
+.profile-picture-container {
+  height: 150px !important;
+  object-fit: cover !important;
+  display: flex;
+
+  align-items: flex-start;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.profile-picture {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin: auto;
+  width: 150px;
+  border-radius: 50%;
+}
+
+.profile-options {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.profile-options > button {
+  margin: 2px;
+  border-radius: 10px;
+}
+
+.profile-col {
+  margin-left: 10px;
+}
+
+.user-panel {
+  width: 75%;
 }

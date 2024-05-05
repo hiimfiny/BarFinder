@@ -1,23 +1,87 @@
 import React, { useState } from "react"
-import { Row, Col, Image, Button } from "react-bootstrap"
+
 import LoginPanel from "./LoginPanel"
 import { useAppSelector } from "../../app/hooks"
 import { getLoggedIn } from "../../features/UISlice"
+import { getUserId } from "../../features/UserSlice"
 
-type UserPanelProps = {
-  userId: string
-  onLoginClick: (username: string, password: string) => void
-}
+import { Card } from "primereact/card"
+import { Button } from "primereact/button"
+import { Image } from "primereact/image"
+import { Dialog } from "primereact/dialog"
+import SettingsDialog from "./SettingsDialog"
+import FriendsDialog from "./FriendsDialog"
 
-const UserPanel = (props: UserPanelProps) => {
+const UserPanel = () => {
   const loggedIn = useAppSelector(getLoggedIn)
+  const userID = useAppSelector(getUserId)
+
+  const [settingsDialog, setSettingsDialog] = useState(false)
+  const [friendsDialog, setFriendsDialog] = useState(false)
   return (
-    <div className="panel">
-      {!loggedIn && <LoginPanel onLoginClick={props.onLoginClick}></LoginPanel>}
+    <Card className="panel">
+      {!loggedIn && <LoginPanel />}
 
       {loggedIn && (
-        <Row>
-          <Col lg={3} className="profile-col">
+        <div className="user-container">
+          <div className="side-panel">
+            <div className="profile-picture-container">
+              <Image
+                src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                alt="Profile Picture"
+                imageClassName="profile-picture"
+              />
+            </div>
+            <div className="profile-options">
+              <Button
+                onClick={() => {
+                  setSettingsDialog(true)
+                }}
+              >
+                Settings
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setFriendsDialog(true)
+                }}
+              >
+                Friends
+              </Button>
+            </div>
+          </div>
+          <Dialog
+            header="Settings"
+            style={{ width: "50vw" }}
+            visible={settingsDialog}
+            onHide={() => {
+              setSettingsDialog(false)
+            }}
+            draggable={false}
+            resizable={false}
+            dismissableMask={true}
+          >
+            <div>
+              <SettingsDialog></SettingsDialog>
+            </div>
+          </Dialog>
+          <Dialog
+            header="Friends"
+            style={{ width: "50vw" }}
+            visible={friendsDialog}
+            onHide={() => {
+              setFriendsDialog(false)
+            }}
+            draggable={false}
+            resizable={false}
+            dismissableMask={true}
+          >
+            <div>
+              <FriendsDialog></FriendsDialog>
+            </div>
+          </Dialog>
+          <div className="user-panel">User Panel</div>
+          {/* <Col lg={3} className="profile-col">
             <Row className="profile-picture-container">
               <div>
                 <Image
@@ -40,18 +104,18 @@ const UserPanel = (props: UserPanelProps) => {
           </Col>
           <Col>
             <Row>
-              <div>{props.userId}</div>
+              <div>{userID}</div>
             </Row>
             <Row>
-              <div>Favourite drinks</div>
+              <div></div>
             </Row>
             <Row>
-              <div>Favourite pubs</div>
+              <div></div>
             </Row>
-          </Col>
-        </Row>
+          </Col> */}
+        </div>
       )}
-    </div>
+    </Card>
   )
 }
 

@@ -3,9 +3,7 @@ import axios from "axios"
 import Login from "./Login"
 import Register from "./Register"
 
-const LoginPanel = (props: {
-  onLoginClick: (username: string, password: string) => void
-}) => {
+const LoginPanel = () => {
   const [loginState, setLoginState] = useState("login")
 
   const switchLoginState = () => {
@@ -23,10 +21,7 @@ const LoginPanel = (props: {
   }
 
   return loginState === "login" ? (
-    <Login
-      onSwitchLoginState={() => switchLoginState()}
-      onLoginClick={props.onLoginClick}
-    />
+    <Login onSwitchLoginState={() => switchLoginState()} />
   ) : (
     <Register
       onSwitchLoginState={() => switchLoginState()}

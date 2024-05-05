@@ -85,7 +85,10 @@ const Panel = () => {
         email: username,
         password: password,
       })
-      .then((res) => dispatch(setUserId(res.data.user._id)))
+      .then((res) => {
+        dispatch(setUserId(res.data.user._id))
+        console.log(res.status)
+      })
     getFavouritedLists()
   }
 
@@ -133,10 +136,7 @@ const Panel = () => {
         <Route path="/" element={<Menu />}>
           <Route path="/login" element={<div>Login</div>}></Route>
           <Route path="/register" element={<div>Regsiter</div>}></Route>
-          <Route
-            path="/user"
-            element={<UserPanel userId={userID} onLoginClick={onLoginClick} />}
-          ></Route>
+          <Route path="/user" element={<UserPanel />}></Route>
           <Route
             path="/ingredients"
             element={

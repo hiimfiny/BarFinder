@@ -4,11 +4,7 @@ import { Button, Modal, Stack } from "react-bootstrap"
 import IngredientItem from "./Ingredient"
 import IngredientForm from "./IngredientForm"
 import IngredientFilter from "./IngredientFilter"
-import PaginationPanel from "../PaginationPanel"
-import { Paginator } from "primereact/paginator"
-
-import { IngredientType, FilterIngredientType } from "../Types"
-
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 import axios from "axios"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import {
@@ -31,30 +27,21 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(5)
 
-  const onPageChange = (event: {
-    first: React.SetStateAction<number>
-    rows: React.SetStateAction<number>
-  }) => {
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first)
     setRows(event.rows)
   }
 
-  const page_size = 5
   const [filterResult, setFilterResult] = useState(defaultIngredient)
   const [order, setOrder] = useState("Default")
 
   const [showForm, setShowForm] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
-  const [pageNumber, setPageNumber] = useState(1)
 
   const handleCloseForm = () => setShowForm(false)
   const handleShowForm = () => setShowForm(true)
 
   const handleShowFilter = () => setShowFilter(!showFilter)
-
-  const handleSelectPage = (selected_number: number) => {
-    setPageNumber(selected_number)
-  }
 
   const onFavouriteClick = (id: string) => {
     let array = favourited
@@ -71,7 +58,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
       .then((res) => console.log(res.data))
   }
 
-  const onFormSubmit = (formResults: IngredientType) => {
+  const onFormSubmit = (formResults: Ingredient) => {
     handleCloseForm()
     console.log(formResults)
     axios
@@ -82,16 +69,23 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
   }
 
   const onFilterSubmit = (filterResults: Ingredient) => {
+    console.log("In filtersubmit!")
     console.log(filterResults)
-    setFilterResult((prevFilterResult) => ({
-      ...prevFilterResult,
-      ...filterResults,
-    }))
+    if (filterResults !== defaultIngredient) {
+      console.log("In the if")
+      setFilterResult((prevFilterResult) => ({
+        ...prevFilterResult,
+        ...filterResults,
+      }))
+    }
 
     handleShowFilter()
   }
 
   const applyFilter = () => {
+    console.log(filterResult)
+    console.log(defaultIngredient)
+    if (filterResult === defaultIngredient) console.log("filter===default")
     const formResultList =
       filterResult === defaultIngredient
         ? ingredientList
@@ -110,7 +104,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
     setFilterResult(defaultIngredient)
   }
 
-  const onEditClick = (formResults: IngredientType) => {
+  const onEditClick = (formResults: Ingredient) => {
     axios
       .post(
         "http://localhost:5000/ingredients/update/" + formResults._id,
@@ -271,13 +265,6 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
             onPageChange={onPageChange}
           />
         </div>
-
-        <PaginationPanel
-          currentPage={pageNumber}
-          totalElements={applyFilter().length}
-          pageSize={page_size}
-          selectPage={handleSelectPage}
-        ></PaginationPanel>
       </div>
     </div>
   )

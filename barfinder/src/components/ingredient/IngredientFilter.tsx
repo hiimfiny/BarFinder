@@ -5,7 +5,7 @@ import {
   ingredientTypeArray,
   ingredientOrderTypes,
 } from "../Types"
-import { Ingredient } from "../../features/IngredientSlice"
+import { defaultIngredient, Ingredient } from "../../features/IngredientSlice"
 
 type ingredientFilterProps = {
   onFilterSubmit: (formResults: Ingredient) => void
@@ -30,6 +30,10 @@ const IngredientFilter = (props: ingredientFilterProps) => {
     props.onFilterSubmit(filterResult)
   }
 
+  const clearFilter = () => {
+    props.onFilterSubmit(defaultIngredient)
+  }
+
   return (
     <Form onSubmit={onFilterSubmit} className="centered-panel-element">
       <Stack
@@ -37,6 +41,13 @@ const IngredientFilter = (props: ingredientFilterProps) => {
         gap={3}
         className="d-flex justify-content-center"
       >
+        <Button
+          onClick={() => {
+            clearFilter()
+          }}
+        >
+          Clear
+        </Button>
         <FloatingLabel
           controlId="floatingOrderInput"
           label="Order"
@@ -86,8 +97,9 @@ const IngredientFilter = (props: ingredientFilterProps) => {
             ))}
           </Form.Select>
         </FloatingLabel>
-
-        <Button type="submit">Filter</Button>
+        <div className="filter-buttons">
+          <Button type="submit">Filter</Button>
+        </div>
       </Stack>
     </Form>
   )
