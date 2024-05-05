@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from "react"
-import { Modal } from "react-bootstrap"
-import TabButton from "./TabButton"
 import DrinkPanel from "./drink/DrinkPanel"
-import LoginPanel from "./user/LoginPanel"
 import Map from "./map/Map"
 import IngredientsPanel from "./ingredient/IngredientsPanel"
 import PubPanel from "./pub/PubPanel"
 import { IngredientType, DrinkType, PubType } from "./Types"
 import axios from "axios"
 import UserPanel from "./user/UserPanel"
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import Menu from "./Menu"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { getLoggedIn } from "../features/UISlice"
+import {
+  getFavourited,
+  getUserId,
+  setFavourited,
+  setUserId,
+} from "../features/UserSlice"
+import { Ingredient } from "../features/IngredientSlice"
+import { setIngredients } from "../features/ListSlice"
 
 const Panel = () => {
-  const [panel, setPanel] = useState("...")
-  const [showLogin, setShowLogin] = useState(false)
+  const dispatch = useAppDispatch()
+  const loggedIn = useAppSelector(getLoggedIn)
+  const userID = useAppSelector(getUserId)
 
-  const handleClose = () => setShowLogin(false)
-  const handleShow = () => setShowLogin(true)
+  //Runs once when the user logs in
+  useEffect(() => {
+    console.log(loggedIn)
+    if (loggedIn) {
+      console.log("AAAAAAAAA")
+      getFavouritedLists()
+    }
+  }, [loggedIn])
 
   const defaultIngredients: IngredientType[] = []
   const defaultDrinks: DrinkType[] = []
@@ -33,25 +47,9 @@ const Panel = () => {
   const [favouritedPubs, setFavouritedPubs] = useState([""])
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
-  //TODO: remove default value
-  const [userID, setUserID] = useState("65f8b0a2863e8bc6b24da173")
   const [selectedPubId, setSelectedPubId] = useState("")
-  const [menuButtons, setMenuButtons] = useState([
-    "Drinks",
-    "Ingredients",
-    "Pubs",
-    "Map",
-    "Login",
-  ])
-  const onClick = (text: string) => {
-    console.log(text)
-    if (text != "Login") setPanel(text)
-    if (text === "Login") handleShow()
-  }
+
   const navigate = useNavigate()
-  const changeIngredients = (array: typeof defaultIngredients) => {
-    setIngredientsList(array)
-  }
   const changeDrinks = (array: typeof defaultDrinks) => {
     setDrinksList(array)
   }
@@ -65,47 +63,45 @@ const Panel = () => {
     if (list === "pub") setFavouritedPubs(array)
   }
 
-  const getIdFromUserId = (user_id: string) => {
-    axios
-      .get(`http://localhost:5000/users/getByFirebaseId/${user_id}`)
-      .then((res) => {
-        setUserID(res.data)
-      })
-  }
   const getFavouritedLists = () => {
-    console.log(userID)
     axios.get(`http://localhost:5000/users/${userID}`).then((res) => {
-      console.log(res.data)
+      dispatch(
+        setFavourited({
+          ingredients: res.data.favouritedIngredients as string[],
+          drinks: res.data.favouritedDrinks as string[],
+          pubs: res.data.favouritedPubs as string[],
+        })
+      )
+      console.log(res.data.favouritedIngredients)
       setFavouritedIngredients(res.data.favouritedIngredients)
       setFavouritedDrinks(res.data.favouritedDrinks)
       setFavouritedPubs(res.data.favouritedPubs)
     })
   }
 
-  const onLoginClick = (user_id: string) => {
-    getIdFromUserId(user_id)
+  const onLoginClick = (username: string, password: string) => {
+    axios
+      .post(`http://localhost:5000/users/login`, {
+        email: username,
+        password: password,
+      })
+      .then((res) => dispatch(setUserId(res.data.user._id)))
     getFavouritedLists()
-    setPanel("User")
-    const updatedButtons = [...menuButtons]
-    updatedButtons[menuButtons.length - 1] = "User"
-    setMenuButtons(updatedButtons)
-    handleClose()
   }
 
   const onLocationPinClick = (pubId: string) => {
-    console.log(pubId)
     setSelectedPubId(pubId)
     navigate("/map")
   }
 
   useEffect(() => {
-    getFavouritedLists()
+    //getFavouritedLists()
     axios
       .get("http://localhost:5000/ingredients/")
       .then((res) => {
         console.log(res.data)
         setIngredientsList(res.data)
-
+        dispatch(setIngredients(res.data as Ingredient[]))
         let ingredientsForDrinksArray: string[] = []
         res.data.forEach((element: { name: string }) => {
           ingredientsForDrinksArray.push(element.name)
@@ -145,13 +141,8 @@ const Panel = () => {
             path="/ingredients"
             element={
               <IngredientsPanel
-                IngredientsList={IngredientsList}
-                favouritedByUser={favouritedIngredients}
-                changeIngredients={changeIngredients}
                 //TODO!
                 adminUser={true}
-                changeFavourite={changeFavouriteList}
-                user_id={userID}
               />
             }
           ></Route>

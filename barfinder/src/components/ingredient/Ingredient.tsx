@@ -20,7 +20,7 @@ type IngredientProps = IngredientType & {
   adminUser: boolean
 }
 
-const Ingredient = (props: IngredientProps) => {
+const IngredientItem = (props: IngredientProps) => {
   const [showEdit, setShowEdit] = useState(false)
   const handleCloseEdit = () => setShowEdit(false)
   const handleShowEdit = () => setShowEdit(true)
@@ -84,4 +84,4 @@ const Ingredient = (props: IngredientProps) => {
   )
 }
 //☆✎✖
-export default Ingredient
+export default IngredientItem

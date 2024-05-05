@@ -5,9 +5,10 @@ import {
   ingredientTypeArray,
   ingredientOrderTypes,
 } from "../Types"
+import { Ingredient } from "../../features/IngredientSlice"
 
 type ingredientFilterProps = {
-  onFilterSubmit: (formResults: FilterIngredientType) => void
+  onFilterSubmit: (formResults: Ingredient) => void
   onOrderSubmit: (order: string) => void
 }
 
@@ -20,10 +21,12 @@ const IngredientFilter = (props: ingredientFilterProps) => {
     e.preventDefault()
 
     const filterResult = {
+      _id: "",
       name: filterName,
       abv: filterAbv === "" ? 0 : parseInt(filterAbv, 10),
       type: filterType,
     }
+
     props.onFilterSubmit(filterResult)
   }
 

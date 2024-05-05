@@ -193,3 +193,18 @@ code {
   align-items: center;
   justify-content: center;
 }
+
+.page-link {
+  background-color: #3e505b !important;
+  border: none !important;
+  color: white !important;
+}
+.page-item.active > .page-link {
+  background-color: #725752 !important;
+}
+.pagination-card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}

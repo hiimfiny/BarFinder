@@ -1,25 +1,19 @@
 import React, { useState } from "react"
 import { Row, Col, Image, Button } from "react-bootstrap"
 import LoginPanel from "./LoginPanel"
+import { useAppSelector } from "../../app/hooks"
+import { getLoggedIn } from "../../features/UISlice"
 
 type UserPanelProps = {
   userId: string
-  onLoginClick: (user_id: string) => void
+  onLoginClick: (username: string, password: string) => void
 }
 
 const UserPanel = (props: UserPanelProps) => {
-  const [loggedIn, setLoggedIn] = useState(false)
-
+  const loggedIn = useAppSelector(getLoggedIn)
   return (
     <div className="panel">
-      {!loggedIn && (
-        <LoginPanel
-          onLoginClick={props.onLoginClick}
-          onSetLoggedIn={() => {
-            setLoggedIn(true)
-          }}
-        ></LoginPanel>
-      )}
+      {!loggedIn && <LoginPanel onLoginClick={props.onLoginClick}></LoginPanel>}
 
       {loggedIn && (
         <Row>
@@ -39,9 +33,8 @@ const UserPanel = (props: UserPanelProps) => {
                 className="profile-options"
                 style={{ background: "#fef6c9" }}
               >
-                <Button className="mb-2">Option 1</Button>
-                <Button className="mb-2">Option 2</Button>
-                <Button className="mb-2">Option 3</Button>
+                <Button className="mb-2">Friends</Button>
+                <Button className="mb-2">Settings</Button>
               </div>
             </Row>
           </Col>

@@ -4,8 +4,7 @@ import Login from "./Login"
 import Register from "./Register"
 
 const LoginPanel = (props: {
-  onLoginClick: (user_id: string) => void
-  onSetLoggedIn: () => void
+  onLoginClick: (username: string, password: string) => void
 }) => {
   const [loginState, setLoginState] = useState("login")
 
@@ -14,12 +13,11 @@ const LoginPanel = (props: {
     if (loginState === "register") setLoginState("login")
   }
 
-  const register = (email: string, firebase_user_id: string) => {
-    console.log("in LoginPanel register function")
+  const register = (email: string, password: string) => {
     axios
       .post("http://localhost:5000/users/add", {
         email: email,
-        firebase_user_id: firebase_user_id,
+        password: password,
       })
       .then((res) => console.log(res.data))
   }
@@ -28,7 +26,6 @@ const LoginPanel = (props: {
     <Login
       onSwitchLoginState={() => switchLoginState()}
       onLoginClick={props.onLoginClick}
-      onSetLoggedIn={props.onSetLoggedIn}
     />
   ) : (
     <Register

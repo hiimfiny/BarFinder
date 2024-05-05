@@ -1,34 +1,26 @@
 import React, { useRef } from "react"
 import "./login.css"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "./firebase_config.js"
+import { useAppDispatch } from "../../app/hooks"
+import { setLoggedIn } from "../../features/UISlice"
+
 const Login = (props: {
   onSwitchLoginState: () => void
-  onLoginClick: (user_id: string) => void
-  onSetLoggedIn: () => void
+  onLoginClick: (username: string, password: string) => void
 }) => {
+  const dispatch = useAppDispatch()
   const usernameInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault()
-    login()
-    props.onSetLoggedIn()
+    dispatch(setLoggedIn(true))
+    props.onLoginClick(
+      usernameInputRef.current!.value,
+      passwordInputRef.current!.value
+    )
+
     usernameInputRef.current!.value = ""
     passwordInputRef.current!.value = ""
-  }
-
-  const login = async () => {
-    try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        usernameInputRef.current!.value,
-        passwordInputRef.current!.value
-      )
-      props.onLoginClick(user.user.uid)
-    } catch (error) {
-      console.log(error)
-    }
   }
 
   return (
