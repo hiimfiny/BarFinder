@@ -80,7 +80,7 @@ const UserPanel = () => {
               <FriendsDialog></FriendsDialog>
             </div>
           </Dialog>
-          <div className="user-panel">User Panel</div>
+          <div className="user-panel"></div>
           {/* <Col lg={3} className="profile-col">
             <Row className="profile-picture-container">
               <div>

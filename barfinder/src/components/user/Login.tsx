@@ -4,11 +4,20 @@ import { useAppDispatch } from "../../app/hooks"
 import { setLoggedIn } from "../../features/UISlice"
 import axios from "axios"
 import { setUserId } from "../../features/UserSlice"
+import { Toast } from "primereact/toast"
 const Login = (props: { onSwitchLoginState: () => void }) => {
   const dispatch = useAppDispatch()
+  const toast = useRef<Toast>(null)
   const usernameInputRef = useRef<HTMLInputElement>(null)
   const passwordInputRef = useRef<HTMLInputElement>(null)
-
+  const showError = () => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: "Wrong email or password!",
+      life: 1500,
+    })
+  }
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault()
 
@@ -25,7 +34,8 @@ const Login = (props: { onSwitchLoginState: () => void }) => {
       .catch((error) => {
         console.log(error.code)
         if (error.code === "ERR_BAD_REQUEST") {
-          alert("Wrong email or password!")
+          showError()
+          //alert("Wrong email or password!")
         }
       })
 
@@ -35,6 +45,7 @@ const Login = (props: { onSwitchLoginState: () => void }) => {
 
   return (
     <div className="login-container">
+      <Toast ref={toast} position="center" />
       <form onSubmit={submitHandler}>
         <h2>Login</h2>
         <label htmlFor="username">Username</label>

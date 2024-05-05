@@ -18,7 +18,7 @@ export interface User {
 const initialState: User = {
   email: "",
   username: "",
-  //TODO! Only for testing, remove later
+  //TODO Only for testing, remove later
   user_id: "6630b2d76c07cf7b92fb2856",
   //user_id: "",
   role: "",
@@ -71,6 +71,5 @@ export const {
   setFavouritedDrinks,
   setFavouritedPubs,
 } = UserSlice.actions
-/* export const getLoggedIn = (state: RootState) => state.uiState.loggedIn
-export const { setLoggedIn } = UserSlice.actions */
+
 export default UserSlice.reducer
