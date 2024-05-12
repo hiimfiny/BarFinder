@@ -1,9 +1,9 @@
 import React, { useRef } from "react"
-import "./login.css"
+import "./user.css"
 import { useAppDispatch } from "../../app/hooks"
 import { setLoggedIn } from "../../features/UISlice"
 import axios from "axios"
-import { setUserId } from "../../features/UserSlice"
+import { setFriends, setRequests, setUserId } from "../../features/UserSlice"
 import { Toast } from "primereact/toast"
 const Login = (props: { onSwitchLoginState: () => void }) => {
   const dispatch = useAppDispatch()
@@ -27,20 +27,30 @@ const Login = (props: { onSwitchLoginState: () => void }) => {
         password: passwordInputRef.current!.value,
       })
       .then((res) => {
-        dispatch(setUserId(res.data.user._id))
-        dispatch(setLoggedIn(true))
-        console.log(res.status)
+        successfulLogin(res.data.user._id)
       })
       .catch((error) => {
         console.log(error.code)
         if (error.code === "ERR_BAD_REQUEST") {
           showError()
-          //alert("Wrong email or password!")
         }
       })
 
     usernameInputRef.current!.value = ""
     passwordInputRef.current!.value = ""
+  }
+
+  const successfulLogin = (id: string) => {
+    dispatch(setUserId(id))
+    dispatch(setLoggedIn(true))
+    axios.get(`http://localhost:5000/users/friendsNames/${id}`).then((res) => {
+      console.log(res.data)
+      dispatch(setFriends(res.data))
+    })
+    axios.get(`http://localhost:5000/users/requestsNames/${id}`).then((res) => {
+      console.log(res.data)
+      dispatch(setRequests(res.data))
+    })
   }
 
   return (

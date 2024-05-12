@@ -6,6 +6,10 @@ import Drink from "./Drink"
 import DrinkFilter from "./DrinkFilter"
 import PaginationPanel from "../PaginationPanel"
 import axios from "axios"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import { getFavourited, getUserId } from "../../features/UserSlice"
+import { getDrinks } from "../../features/ListSlice"
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 type DrinkPanelProps = {
   DrinksList: DrinkType[]
   favouritedByUser: string[]
@@ -17,6 +21,18 @@ type DrinkPanelProps = {
 }
 
 const DrinkPanel = (props: DrinkPanelProps) => {
+  const dispatch = useAppDispatch()
+  const user_id = useAppSelector(getUserId)
+  const favourited = useAppSelector(getFavourited).drinks
+  const drinkList = useAppSelector(getDrinks)
+  const [first, setFirst] = useState(0)
+  const [rows, setRows] = useState(5)
+
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
+    setFirst(event.first)
+    setRows(event.rows)
+  }
+
   const page_size = 5
   const [DrinksList, setDrinksList] = useState(props.DrinksList)
   const [filterDrinksList, setFilterDrinksList] = useState(props.DrinksList)
@@ -32,9 +48,6 @@ const DrinkPanel = (props: DrinkPanelProps) => {
 
   const handleShowFilter = () => setShowFilter(!showFilter)
 
-  const handleSelectPage = (selected_number: number) => {
-    setPageNumber(selected_number)
-  }
   const clearFilter = () => {
     setFilterDrinksList(DrinksList)
   }
@@ -194,12 +207,14 @@ const DrinkPanel = (props: DrinkPanelProps) => {
           </div>
         )}
 
-        <PaginationPanel
-          currentPage={pageNumber}
-          totalElements={filterDrinksList.length}
-          pageSize={page_size}
-          selectPage={handleSelectPage}
-        ></PaginationPanel>
+        <div className="pagination-card">
+          <Paginator
+            first={first}
+            rows={rows}
+            totalRecords={drinkList.length}
+            onPageChange={onPageChange}
+          />
+        </div>
       </div>
     </div>
   )

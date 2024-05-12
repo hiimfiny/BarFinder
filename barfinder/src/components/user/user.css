@@ -79,3 +79,56 @@ body {
   margin-top: 10px;
   margin-bottom: 2px;
 }
+
+.friends-panel {
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  background-color: #f0f0f0 !important;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column; /* Change flex direction to column */
+}
+
+.friends-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.friends-header-menu {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.friends-header-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.friends-header-button:hover {
+  background-color: #e0e0e0;
+}
+
+.friends-header-button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.friends-list {
+  padding-top: 10px;
+}
+
+.request-section {
+  margin-bottom: 20px;
+  margin-left: 10px;
+}

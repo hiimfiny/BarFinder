@@ -1,16 +1,11 @@
 import React, { useState } from "react"
 
-import { IngredientType, emptyStar, fullStar } from "../Types"
+import { IngredientType } from "../Types"
+
+import { Card } from "primereact/card"
+import { Button } from "primereact/button"
+import { Dialog } from "primereact/dialog"
 import IngredientForm from "./IngredientForm"
-
-import { Card, Button, Stack, Modal } from "react-bootstrap"
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { library } from "@fortawesome/fontawesome-svg-core"
-
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons"
-
-library.add(faPen, faTimes)
 
 type IngredientProps = IngredientType & {
   onFavouriteClick: (id: string) => void
@@ -31,56 +26,61 @@ const IngredientItem = (props: IngredientProps) => {
     props.onEditClick(formResult)
     handleCloseEdit()
   }
+
+  const header = <div className="ingredient-card-header">{props.name}</div>
   return (
-    <Card style={{ width: "18rem", margin: "auto" }} className="card">
-      <Card.Body>
-        <Card.Title>{props.name}</Card.Title>
-        <div className="d-flex justify-content-between">
-          <div className="p-2">
-            <Card.Text>
-              {props.type + (props.abv === 0 ? " " : " (" + props.abv + "%)")}
-            </Card.Text>
+    <div className="ingredient-card">
+      <Card header={header} className="md:w-25rem">
+        <div className="ingredient-card-content">
+          <div className="ingredient-card-text">
+            {props.type + (props.abv === 0 ? " " : " (" + props.abv + "%)")}
           </div>
-          <Stack direction="horizontal" gap={1}>
+          <div className="ingredient-card-buttons">
             <Button
+              className={`p-button-rounded p-button-text p-button-outlined`}
+              icon={props.isFavourited ? "pi pi-star-fill" : "pi pi-star"}
               onClick={() => {
                 props.onFavouriteClick(props._id)
               }}
-            >
-              {props.isFavourited ? fullStar : emptyStar}
-            </Button>
+            ></Button>
             {props.adminUser && (
               <Button
+                className={`p-button-rounded p-button-text p-button-outlined`}
+                icon="pi pi-pencil"
                 onClick={() => {
                   handleShowEdit()
                 }}
-              >
-                <FontAwesomeIcon icon={faPen} />
-              </Button>
+              ></Button>
             )}
             {props.adminUser && (
-              <Button onClick={() => props.onDeleteClick(props._id)}>
-                <FontAwesomeIcon icon={faTimes} />
-              </Button>
+              <Button
+                className={`p-button-rounded p-button-text p-button-outlined`}
+                icon="pi pi-times"
+                onClick={() => props.onDeleteClick(props._id)}
+              ></Button>
             )}
-          </Stack>
+          </div>
         </div>
-        <Modal show={showEdit} onHide={handleCloseEdit}>
-          <Modal.Header closeButton>
-            <Modal.Title>Edit ingredient</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <IngredientForm
-              onFormSubmit={onEditSubmit}
-              id={props._id}
-              name={props.name}
-              abv={props.abv.toString()}
-              type={props.type}
-            ></IngredientForm>
-          </Modal.Body>
-        </Modal>
-      </Card.Body>
-    </Card>
+      </Card>
+      <Dialog
+        visible={showEdit}
+        onHide={handleCloseEdit}
+        closeIcon={true}
+        draggable={false}
+        dismissableMask={true}
+        header="Edit ingredient"
+        className="edit-dialog"
+      >
+        <div>Edit ingredient</div>
+        <IngredientForm
+          onFormSubmit={onEditSubmit}
+          id={props._id}
+          name={props.name}
+          abv={props.abv.toString()}
+          type={props.type}
+        ></IngredientForm>
+      </Dialog>
+    </div>
   )
 }
 //☆✎✖

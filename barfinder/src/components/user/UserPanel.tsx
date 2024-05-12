@@ -31,6 +31,7 @@ const UserPanel = () => {
                 alt="Profile Picture"
                 imageClassName="profile-picture"
               />
+              <div>{userID}</div>
             </div>
             <div className="profile-options">
               <Button
@@ -66,20 +67,18 @@ const UserPanel = () => {
             </div>
           </Dialog>
           <Dialog
-            header="Friends"
+            header={null}
             style={{ width: "50vw" }}
             visible={friendsDialog}
             onHide={() => {
               setFriendsDialog(false)
             }}
+            closable={false}
             draggable={false}
             resizable={false}
             dismissableMask={true}
-          >
-            <div>
-              <FriendsDialog></FriendsDialog>
-            </div>
-          </Dialog>
+            content={<FriendsDialog></FriendsDialog>}
+          ></Dialog>
           <div className="user-panel"></div>
           {/* <Col lg={3} className="profile-col">
             <Row className="profile-picture-container">

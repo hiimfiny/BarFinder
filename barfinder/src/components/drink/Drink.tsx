@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 
 import { DrinkType, FilterDrinkType, emptyStar, fullStar } from "../Types"
-import { Card, Button, Stack, Modal, Image } from "react-bootstrap"
-
+import { Stack, Modal, Image } from "react-bootstrap"
+import { Card } from "primereact/card"
+import { Button } from "primereact/button"
+import { Dialog } from "primereact/dialog"
 import DrinkForm from "./DrinkForm"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -32,66 +34,74 @@ const Drink = (props: DrinkProps) => {
     props.onEditClick(formResult)
     handleCloseEdit()
   }
+  const header = <div className="drink-card-header">{props.name}</div>
   return (
-    <Card style={{ width: "20rem", margin: "auto" }}>
-      <Card.Body>
-        <Card.Title>{props.name}</Card.Title>
-        <div className="d-flex justify-content-between">
-          <div className="p-2">
-            <Image
+    <div className="drink-card">
+      <Card header={header} className="md:w-25rem">
+        <div className="drink-card-content">
+          <div className="drink-card-text">
+            <img
+              //TODO add image
               src={
-                props.img === ""
-                  ? "https://static.specsonline.com/wp-content/themes/cheers/assets/images/default_bar-mixers.png"
-                  : props.img
+                "https://toppng.com/uploads/preview/cocktails-martini-glass-11563660943lpjh5ewack.png"
               }
-              style={{ width: "60px", height: "60px" }}
+              alt="Image"
+              className="responsive-image"
             />
           </div>
-          <Stack direction="horizontal" gap={1}>
+          <div className="ingredient-card-buttons">
             <Button
+              className={`p-button-rounded p-button-text p-button-outlined`}
+              icon={props.isFavourited ? "pi pi-star-fill" : "pi pi-star"}
               onClick={() => {
                 props.onFavouriteClick(props._id)
               }}
-            >
-              {props.isFavourited ? fullStar : emptyStar}
-            </Button>
+            ></Button>
             {props.adminUser && (
               <Button
+                className={`p-button-rounded p-button-text p-button-outlined`}
+                icon="pi pi-pencil"
                 onClick={() => {
                   handleShowEdit()
                 }}
-              >
-                <FontAwesomeIcon icon={faPen} />
-              </Button>
+              ></Button>
             )}
             {props.adminUser && (
-              <Button onClick={() => props.onDeleteClick(props._id)}>
-                <FontAwesomeIcon icon={faTimes} />
-              </Button>
+              <Button
+                className={`p-button-rounded p-button-text p-button-outlined`}
+                icon="pi pi-times"
+                onClick={() => props.onDeleteClick(props._id)}
+              ></Button>
             )}
-          </Stack>
+          </div>
         </div>
-        <p>{props.ingredients.join(", ")}</p>
-        <Modal show={showEdit} onHide={handleCloseEdit}>
-          <Modal.Header closeButton>
-            <Modal.Title>Edit ingredient</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DrinkForm
-              key={props._id}
-              id={props._id}
-              name={props.name}
-              type={props.type}
-              glass={props.glass}
-              img={props.img}
-              ingredients={props.ingredients}
-              onFormSubmit={onEditSubmit}
-              ingredientList={props.ingredientsList}
-            ></DrinkForm>
-          </Modal.Body>
-        </Modal>
-      </Card.Body>
-    </Card>
+        <div className="drink-ingredients">
+          <p>{props.ingredients.join(", ")}</p>
+        </div>
+      </Card>
+      <Dialog
+        visible={showEdit}
+        onHide={handleCloseEdit}
+        closeIcon={true}
+        draggable={false}
+        dismissableMask={true}
+        header="Edit ingredient"
+        className="edit-dialog"
+      >
+        <div>Edit ingredient</div>
+        <DrinkForm
+          key={props._id}
+          id={props._id}
+          name={props.name}
+          type={props.type}
+          glass={props.glass}
+          img={props.img}
+          ingredients={props.ingredients}
+          onFormSubmit={onEditSubmit}
+          ingredientList={props.ingredientsList}
+        ></DrinkForm>
+      </Dialog>
+    </div>
   )
 }
 

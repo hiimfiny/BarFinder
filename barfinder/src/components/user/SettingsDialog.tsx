@@ -117,3 +117,92 @@ const SettingsDialog = () => {
 }
 
 export default SettingsDialog
+
+/*   <div className="friends-panel">
+  <div className="friend-list">
+    <TabView>
+      <TabPanel header="Friends" className="friend-tabpanel">
+        <ScrollPanel style={{ height: "200px" }}>
+          <ul>
+            <div>
+              {requestVisible ? "Requests" : "Friends"}
+              <Button
+                icon="pi pi-refresh"
+                onClick={() => {
+                  refreshFriends()
+                }}
+              ></Button>
+            </div>
+          </ul>
+        </ScrollPanel>
+      </TabPanel>
+      <TabPanel header="Requests" className="friend-tabpanel">
+        <ScrollPanel style={{ height: "200px" }}>
+          <div>
+            {requestVisible ? "Requests" : "Friends"}
+            <Button
+              icon="pi pi-refresh"
+              onClick={() => {
+                refreshFriends()
+              }}
+            ></Button>
+          </div>
+          {requests.map((friend, index) => (
+            <li key={index}>
+              {friend}
+              <Button
+                icon="pi pi-times"
+                className="p-button-rounded p-button-danger p-button-sm"
+                onClick={() => handleDeleteFriend(index)}
+              />
+            </li>
+          ))}
+        </ScrollPanel>
+      </TabPanel>
+    </TabView>
+  </div>
+  <div className="request-section">
+    {showRequestInput ? (
+      <div className="request-input">
+        <InputText
+          value={requestInput}
+          onChange={(e) => setRequestInput(e.target.value)}
+          placeholder="Enter email address"
+        />
+        <Button
+          label="Add"
+          className="p-button-raised p-button-primary"
+          onClick={handleAddFriendClick}
+        />
+        <Button
+          icon="pi pi-times"
+          className="p-button-rounded p-button-danger p-button-sm"
+          onClick={() => setShowRequestInput(false)}
+        />
+      </div>
+    ) : (
+      <Button
+        label="Add friend"
+        className="p-button-raised"
+        onClick={handleRequestClick}
+      />
+    )}
+  </div>
+</div> */
+
+/* {requestVisible &&
+  requests.map((request, index) => (
+    <li key={index}>
+      {request}
+      <Button
+        icon="pi pi-check"
+        className="p-button-rounded p-button-sm"
+        onClick={() => handleAcceptFriendRequest(request, index)}
+      />
+      <Button
+        icon="pi pi-times"
+        className="p-button-rounded p-button-danger p-button-sm"
+        onClick={() => handleDeclineFriendRequest(request, index)}
+      />
+    </li>
+  ))} */

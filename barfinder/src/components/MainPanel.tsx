@@ -21,7 +21,8 @@ import { setIngredients } from "../features/ListSlice"
 
 const Panel = () => {
   const dispatch = useAppDispatch()
-  const loggedIn = useAppSelector(getLoggedIn)
+  //const loggedIn = useAppSelector(getLoggedIn)
+  const loggedIn = true
   const userID = useAppSelector(getUserId)
 
   //Runs once when the user logs in

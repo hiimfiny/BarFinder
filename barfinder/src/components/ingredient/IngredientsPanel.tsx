@@ -83,9 +83,6 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
   }
 
   const applyFilter = () => {
-    console.log(filterResult)
-    console.log(defaultIngredient)
-    if (filterResult === defaultIngredient) console.log("filter===default")
     const formResultList =
       filterResult === defaultIngredient
         ? ingredientList

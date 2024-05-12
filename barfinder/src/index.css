@@ -27,6 +27,14 @@ This is mostly intended for prototyping; please download the pattern and re-host
   .pagination_button {
   background-color: #3e505b !important;
 }
+
+/* TODO: define variables for colors */
+/* TODO: separate selectors */
+
+.p-button:focus {
+  box-shadow: none !important;
+}
+
 .panel {
   border: 1px solid gray;
   border-radius: 15px;
@@ -246,4 +254,67 @@ code {
 
 .user-panel {
   width: 75%;
+}
+
+.edit-dialog {
+  width: 40% !important;
+}
+
+.ingredient-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-card-body {
+  padding: 0px !important;
+}
+
+.ingredient-card-header {
+  font-weight: 600;
+  font-size: large;
+}
+.ingredient-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.ingredient-card-text {
+  flex: 1;
+}
+
+.ingredient-card-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.drink-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drink-card-header {
+  font-weight: 600;
+  font-size: large;
+}
+.drink-card-content {
+  display: flex;
+  align-items: center;
+}
+
+.drink-card-text {
+  flex: 1;
+}
+
+.drink-card-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.responsive-image {
+  max-width: 100%; /* Ensure image never exceeds container width */
+  height: 100px; /* Allow image to scale proportionally */
 }

@@ -13,16 +13,20 @@ export interface User {
   user_id: string
   role: string
   favourited: Favourited
+  friends: string[]
+  requests: string[]
 }
 
 const initialState: User = {
   email: "",
   username: "",
   //TODO Only for testing, remove later
-  user_id: "6630b2d76c07cf7b92fb2856",
+  user_id: "6641028b4dcbe9a88235870f",
   //user_id: "",
   role: "",
   favourited: { ingredients: [], drinks: [], pubs: [] },
+  friends: [],
+  requests: [],
 }
 
 export const UserSlice = createSlice({
@@ -53,6 +57,12 @@ export const UserSlice = createSlice({
     setFavouritedPubs: (state, action: PayloadAction<string[]>) => {
       state.favourited.pubs = action.payload
     },
+    setFriends: (state, action: PayloadAction<string[]>) => {
+      state.friends = action.payload
+    },
+    setRequests: (state, action: PayloadAction<string[]>) => {
+      state.requests = action.payload
+    },
   },
 })
 export const getUserId = (state: RootState) => state.user.user_id
@@ -60,6 +70,8 @@ export const getEmail = (state: RootState) => state.user.email
 export const getUsername = (state: RootState) => state.user.username
 export const getRole = (state: RootState) => state.user.role
 export const getFavourited = (state: RootState) => state.user.favourited
+export const getFriends = (state: RootState) => state.user.friends
+export const getRequests = (state: RootState) => state.user.requests
 
 export const {
   setEmail,
@@ -70,6 +82,8 @@ export const {
   setFavouritedIngredients,
   setFavouritedDrinks,
   setFavouritedPubs,
+  setFriends,
+  setRequests,
 } = UserSlice.actions
 
 export default UserSlice.reducer
