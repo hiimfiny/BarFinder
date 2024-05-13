@@ -10,6 +10,7 @@ import { defaultIngredient, Ingredient } from "../../features/IngredientSlice"
 type ingredientFilterProps = {
   onFilterSubmit: (formResults: Ingredient) => void
   onOrderSubmit: (order: string) => void
+  onClearFilter: () => void
 }
 
 const IngredientFilter = (props: ingredientFilterProps) => {
@@ -31,7 +32,7 @@ const IngredientFilter = (props: ingredientFilterProps) => {
   }
 
   const clearFilter = () => {
-    props.onFilterSubmit(defaultIngredient)
+    props.onClearFilter()
   }
 
   return (

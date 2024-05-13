@@ -26,6 +26,9 @@ type PubPanelProps = {
   user_id: string
 }
 
+//TODO style add and edit form
+//TODO filter
+//TODO add redux
 const PubPanel = (props: PubPanelProps) => {
   const page_size = 5
 

@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { getFavourited, getUserId } from "../../features/UserSlice"
 import { getDrinks } from "../../features/ListSlice"
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
+import { Dialog } from "primereact/dialog"
 type DrinkPanelProps = {
   DrinksList: DrinkType[]
   favouritedByUser: string[]
@@ -19,7 +20,9 @@ type DrinkPanelProps = {
   changeFavourite: (list: string, array: string[]) => void
   user_id: string
 }
-
+//TODO connect redux
+//TODO style cards, add scrollpanel
+//add and edit modal->dialog
 const DrinkPanel = (props: DrinkPanelProps) => {
   const dispatch = useAppDispatch()
   const user_id = useAppSelector(getUserId)
@@ -154,24 +157,26 @@ const DrinkPanel = (props: DrinkPanelProps) => {
             ingredientList={props.IngredientList}
           ></DrinkFilter>
         )}
-
-        <Modal show={showForm} onHide={handleCloseForm}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add a Drink</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <DrinkForm
-              onFormSubmit={onFormSubmit}
-              id={""}
-              name={""}
-              type={""}
-              ingredients={[]}
-              glass={""}
-              img={""}
-              ingredientList={props.IngredientList}
-            ></DrinkForm>
-          </Modal.Body>
-        </Modal>
+        <Dialog
+          visible={showForm}
+          onHide={handleCloseForm}
+          //closeIcon={true}
+          draggable={false}
+          dismissableMask={true}
+          header="Add an ingredient"
+          className="edit-dialog"
+        >
+          <DrinkForm
+            onFormSubmit={onFormSubmit}
+            id={""}
+            name={""}
+            type={""}
+            ingredients={[]}
+            glass={""}
+            img={""}
+            ingredientList={props.IngredientList}
+          ></DrinkForm>
+        </Dialog>
       </div>
       <div>
         {filterDrinksList.length === 0 ? (

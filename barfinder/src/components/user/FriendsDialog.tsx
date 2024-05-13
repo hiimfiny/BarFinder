@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react"
 import { ScrollPanel } from "primereact/scrollpanel"
 import { Button } from "primereact/button"
 import { InputText } from "primereact/inputtext"
-
-import { TabView, TabPanel } from "primereact/tabview"
-
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import {
   getFriends,
@@ -125,7 +122,11 @@ const FriendsDialog = () => {
             Requests
           </div>
         </div>
-        <Button icon="pi pi-refresh" onClick={() => refreshFriends()}></Button>
+        <Button
+          icon="pi pi-refresh"
+          className="refresh-button"
+          onClick={() => refreshFriends()}
+        ></Button>
       </div>
       <div className="friends-list">
         <ScrollPanel style={{ height: "200px" }}>
@@ -136,7 +137,7 @@ const FriendsDialog = () => {
                   {friend}
                   <Button
                     icon="pi pi-times"
-                    className="p-button-rounded p-button-danger p-button-sm"
+                    className="p-button-rounded p-button-danger p-button-sm delete-button"
                     onClick={() => handleDeleteFriend(index)}
                   />
                 </li>
@@ -147,12 +148,12 @@ const FriendsDialog = () => {
                   {request}
                   <Button
                     icon="pi pi-check"
-                    className="p-button-rounded p-button-sm"
+                    className="p-button-rounded p-button-sm accept-button"
                     onClick={() => handleAcceptFriendRequest(request, index)}
                   />
                   <Button
                     icon="pi pi-times"
-                    className="p-button-rounded p-button-danger p-button-sm"
+                    className="p-button-rounded p-button-danger p-button-sm delete-button"
                     onClick={() => handleDeclineFriendRequest(request, index)}
                   />
                 </li>
@@ -161,30 +162,34 @@ const FriendsDialog = () => {
         </ScrollPanel>
       </div>
       <div className="request-section">
-        {showRequestInput ? (
-          <div className="request-input">
-            <InputText
-              value={requestInput}
-              onChange={(e) => setRequestInput(e.target.value)}
-              placeholder="Enter email address"
-            />
-            <Button
-              label="Add"
-              className="p-button-raised p-button-primary"
-              onClick={handleAddFriendClick}
-            />
-            <Button
-              icon="pi pi-times"
-              className="p-button-rounded p-button-danger p-button-sm"
-              onClick={() => setShowRequestInput(false)}
-            />
+        {!requestVisible && (
+          <div>
+            {showRequestInput ? (
+              <div className="request-input">
+                <InputText
+                  value={requestInput}
+                  onChange={(e) => setRequestInput(e.target.value)}
+                  placeholder="Enter email address"
+                />
+                <Button
+                  label="Add"
+                  className="p-button-raised p-button-primary"
+                  onClick={handleAddFriendClick}
+                />
+                <Button
+                  icon="pi pi-times"
+                  className="p-button-rounded p-button-danger p-button-sm delete-button"
+                  onClick={() => setShowRequestInput(false)}
+                />
+              </div>
+            ) : (
+              <Button
+                label="Add friend"
+                icon="pi pi-plus"
+                onClick={handleRequestClick}
+              />
+            )}
           </div>
-        ) : (
-          <Button
-            label="Add friend"
-            className="p-button-raised"
-            onClick={handleRequestClick}
-          />
         )}
       </div>
     </div>

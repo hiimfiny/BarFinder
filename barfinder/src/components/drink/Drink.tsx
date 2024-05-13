@@ -41,9 +41,10 @@ const Drink = (props: DrinkProps) => {
         <div className="drink-card-content">
           <div className="drink-card-text">
             <img
-              //TODO add image
               src={
-                "https://toppng.com/uploads/preview/cocktails-martini-glass-11563660943lpjh5ewack.png"
+                props.img
+                  ? props.img
+                  : "https://toppng.com/uploads/preview/cocktails-martini-glass-11563660943lpjh5ewack.png"
               }
               alt="Image"
               className="responsive-image"
@@ -82,13 +83,12 @@ const Drink = (props: DrinkProps) => {
       <Dialog
         visible={showEdit}
         onHide={handleCloseEdit}
-        closeIcon={true}
+        //closeIcon={true}
         draggable={false}
         dismissableMask={true}
         header="Edit ingredient"
         className="edit-dialog"
       >
-        <div>Edit ingredient</div>
         <DrinkForm
           key={props._id}
           id={props._id}

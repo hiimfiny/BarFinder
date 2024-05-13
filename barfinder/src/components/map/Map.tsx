@@ -14,6 +14,7 @@ type MapProps = {
   pubsList: PubType[]
   selectedPubId: string
 }
+//TODO add filter
 
 const Map = (props: MapProps) => {
   const [pubsList, setPubsList] = useState(props.pubsList)

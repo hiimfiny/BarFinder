@@ -6,6 +6,7 @@ const userSchema = new Schema({
   email: { type: String },
   username: { type: String, default: "" },
   password: { type: String },
+  role: { type: String, default: "user" },
   favouritedIngredients: { type: Array },
   favouritedDrinks: { type: Array },
   favouritedPubs: { type: Array },

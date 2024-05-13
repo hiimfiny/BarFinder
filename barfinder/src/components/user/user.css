@@ -132,3 +132,18 @@ body {
   margin-bottom: 20px;
   margin-left: 10px;
 }
+
+.refresh-button {
+  border: 1px solid #007bff;
+  border-radius: 50%;
+}
+.accept-button {
+  margin-left: 10px;
+  border: 1px solid #007bff;
+  border-radius: 50%;
+}
+.delete-button {
+  border: 1px solid red;
+  border-radius: 50%;
+  margin-left: 5px;
+}

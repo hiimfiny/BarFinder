@@ -14,11 +14,14 @@ import {
 } from "../../features/UserSlice"
 import { getIngredients, setIngredients } from "../../features/ListSlice"
 import { Ingredient, defaultIngredient } from "../../features/IngredientSlice"
+import { Dialog } from "primereact/dialog"
 
 type IngredientsPanelProps = {
   adminUser: boolean
 }
 
+//TODO Scrollpanel & rows/page
+//TODO Edit and add form styling
 const IngredientsPanel = (props: IngredientsPanelProps) => {
   const dispatch = useAppDispatch()
   const user_id = useAppSelector(getUserId)
@@ -99,6 +102,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
 
   const clearFilter = () => {
     setFilterResult(defaultIngredient)
+    setShowFilter(false)
   }
 
   const onEditClick = (formResults: Ingredient) => {
@@ -209,23 +213,26 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
           <IngredientFilter
             onFilterSubmit={onFilterSubmit}
             onOrderSubmit={onOrderSubmit}
+            onClearFilter={clearFilter}
           />
         )}
-
-        <Modal show={showForm} onHide={handleCloseForm}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add an ingredient</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <IngredientForm
-              onFormSubmit={onFormSubmit}
-              id={""}
-              name={""}
-              abv={""}
-              type={""}
-            ></IngredientForm>
-          </Modal.Body>
-        </Modal>
+        <Dialog
+          visible={showForm}
+          onHide={handleCloseForm}
+          closeIcon={true}
+          draggable={false}
+          dismissableMask={true}
+          header="Add an ingredient"
+          className="edit-dialog"
+        >
+          <IngredientForm
+            onFormSubmit={onFormSubmit}
+            id={""}
+            name={""}
+            abv={""}
+            type={""}
+          ></IngredientForm>
+        </Dialog>
       </div>
       <div>
         {applyFilter().length === 0 ? (
