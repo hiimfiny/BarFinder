@@ -13,6 +13,10 @@ import { PubType, emptyStar, fullStar } from "../Types"
 import { checkOpened } from "../Functions"
 import PubForm from "./PubForm"
 import PubRatingModal from "./PubRatingModal"
+import { setSelectedPubId } from "../../features/PubSlice"
+import { useAppDispatch } from "../../app/hooks"
+import { useNavigate } from "react-router-dom"
+import { Ingredient } from "../../features/ListSlice"
 library.add(faPen, faTimes, faLocationDot)
 
 type PubProps = PubType & {
@@ -20,13 +24,14 @@ type PubProps = PubType & {
   onEditClick: (formResult: PubType) => void
   onDeleteClick: (id: string) => void
   onRateClick: (ratings: number[], id: string) => void
-  onLocationPinClick: (pubId: string) => void
   isFavourited: boolean
   adminUser: boolean
-  ingredientsList: string[]
+  ingredientsList: Ingredient[]
 }
 
 const Pub = (props: PubProps) => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [showEdit, setShowEdit] = useState(false)
   const [showRating, setShowRating] = useState(false)
   const [ratingArray, setRatingArray] = useState(props.ratings)
@@ -57,6 +62,10 @@ const Pub = (props: PubProps) => {
     calculateAvgRating()
     props.onRateClick([...ratingArray, rating], props._id)
   }
+  const onLocationPinClick = (pubId: string) => {
+    dispatch(setSelectedPubId(pubId))
+    navigate("/map")
+  }
   return (
     <Card style={{ width: "30rem", margin: "auto" }}>
       <Card.Body>
@@ -68,7 +77,7 @@ const Pub = (props: PubProps) => {
           <Stack direction="horizontal" gap={1}>
             <Button
               onClick={() => {
-                props.onLocationPinClick(props._id)
+                onLocationPinClick(props._id)
               }}
             >
               <FontAwesomeIcon icon={faLocationDot} />
@@ -139,3 +148,6 @@ const Pub = (props: PubProps) => {
 }
 
 export default Pub
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.")
+}

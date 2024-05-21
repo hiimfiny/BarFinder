@@ -6,7 +6,7 @@ import PubPanel from "./pub/PubPanel"
 import { IngredientType, DrinkType, PubType } from "./Types"
 import axios from "axios"
 import UserPanel from "./user/UserPanel"
-import { Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Menu from "./Menu"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { getLoggedIn } from "../features/UISlice"
@@ -17,7 +17,13 @@ import {
   setUserId,
 } from "../features/UserSlice"
 import { Ingredient } from "../features/IngredientSlice"
-import { setIngredients } from "../features/ListSlice"
+import {
+  Drink,
+  setDrinks,
+  setIngredients,
+  setPubs,
+} from "../features/ListSlice"
+import { Pub, setSelectedPubId } from "../features/PubSlice"
 
 const Panel = () => {
   const dispatch = useAppDispatch()
@@ -38,31 +44,10 @@ const Panel = () => {
   const defaultDrinks: DrinkType[] = []
   const defaultPubs: PubType[] = []
 
-  const [IngredientsList, setIngredientsList] = useState(defaultIngredients)
-  const [favouritedIngredients, setFavouritedIngredients] = useState([""])
-
-  const [DrinksList, setDrinksList] = useState(defaultDrinks)
-  const [favouritedDrinks, setFavouritedDrinks] = useState([""])
-
   const [pubsList, setPubsList] = useState(defaultPubs)
   const [favouritedPubs, setFavouritedPubs] = useState([""])
 
   const [ingredientsStringList, setIngredientsStringList] = useState([""])
-  const [selectedPubId, setSelectedPubId] = useState("")
-
-  const navigate = useNavigate()
-  const changeDrinks = (array: typeof defaultDrinks) => {
-    setDrinksList(array)
-  }
-  const changePubs = (array: typeof defaultPubs) => {
-    setPubsList(array)
-  }
-
-  const changeFavouriteList = (list: string, array: string[]) => {
-    if (list === "ingredient") setFavouritedIngredients(array)
-    if (list === "drink") setFavouritedDrinks(array)
-    if (list === "pub") setFavouritedPubs(array)
-  }
 
   const getFavouritedLists = () => {
     axios.get(`http://localhost:5000/users/${userID}`).then((res) => {
@@ -74,8 +59,6 @@ const Panel = () => {
         })
       )
       console.log(res.data.favouritedIngredients)
-      setFavouritedIngredients(res.data.favouritedIngredients)
-      setFavouritedDrinks(res.data.favouritedDrinks)
       setFavouritedPubs(res.data.favouritedPubs)
     })
   }
@@ -93,18 +76,12 @@ const Panel = () => {
     getFavouritedLists()
   }
 
-  const onLocationPinClick = (pubId: string) => {
-    setSelectedPubId(pubId)
-    navigate("/map")
-  }
-
   useEffect(() => {
     //getFavouritedLists()
     axios
       .get("http://localhost:5000/ingredients/")
       .then((res) => {
         console.log(res.data)
-        setIngredientsList(res.data)
         dispatch(setIngredients(res.data as Ingredient[]))
         let ingredientsForDrinksArray: string[] = []
         res.data.forEach((element: { name: string }) => {
@@ -118,7 +95,7 @@ const Panel = () => {
       .get("http://localhost:5000/drinks/")
       .then((res) => {
         console.log(res.data)
-        setDrinksList(res.data)
+        dispatch(setDrinks(res.data as Drink[]))
       })
       .catch((error) => console.log(error))
 
@@ -126,6 +103,7 @@ const Panel = () => {
       .get("http://localhost:5000/pubs/")
       .then((res) => {
         console.log(res.data)
+        dispatch(setPubs(res.data as Pub[]))
         setPubsList(res.data)
       })
       .catch((error) => console.log(error))
@@ -133,58 +111,17 @@ const Panel = () => {
 
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<Menu />}>
-          <Route path="/login" element={<div>Login</div>}></Route>
-          <Route path="/register" element={<div>Regsiter</div>}></Route>
-          <Route path="/user" element={<UserPanel />}></Route>
-          <Route
-            path="/ingredients"
-            element={
-              <IngredientsPanel
-                //TODO!
-                adminUser={true}
-              />
-            }
-          ></Route>
-          <Route
-            path="/drinks"
-            element={
-              <DrinkPanel
-                DrinksList={DrinksList}
-                favouritedByUser={favouritedDrinks}
-                changeDrinks={changeDrinks}
-                //TODO!
-                adminUser={true}
-                IngredientList={ingredientsStringList}
-                changeFavourite={changeFavouriteList}
-                user_id={userID}
-              />
-            }
-          ></Route>
-          <Route
-            path="/pubs"
-            element={
-              <PubPanel
-                pubsList={pubsList}
-                favouritedByUser={favouritedPubs}
-                changePubs={changePubs}
-                onLocationPinClick={onLocationPinClick}
-                //TODO!
-                adminUser={true}
-                IngredientList={ingredientsStringList}
-                changeFavourite={changeFavouriteList}
-                drinksList={DrinksList}
-                user_id={userID}
-              />
-            }
-          ></Route>
-          <Route
-            path="/map"
-            element={<Map pubsList={pubsList} selectedPubId={selectedPubId} />}
-          ></Route>
-        </Route>
-      </Routes>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Menu />}>
+            <Route path="/user" element={<UserPanel />}></Route>
+            <Route path="/ingredients" element={<IngredientsPanel />}></Route>
+            <Route path="/drinks" element={<DrinkPanel />}></Route>
+            <Route path="/pubs" element={<PubPanel />}></Route>
+            <Route path="/map" element={<Map />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }

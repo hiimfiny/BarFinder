@@ -1,10 +1,11 @@
 import React, { useState } from "react"
 import { Form, Stack, Button, FloatingLabel } from "react-bootstrap"
 import { FilterDrinkType, drinkTypeArray, drinkGlassArray } from "../Types"
+import { Ingredient } from "../../features/ListSlice"
 
 type DrinkFilterProps = {
   onFilterSubmit: (formResults: FilterDrinkType) => void
-  ingredientList: string[]
+  ingredientList: Ingredient[]
 }
 
 const DrinkFilter = (props: DrinkFilterProps) => {
@@ -39,7 +40,6 @@ const DrinkFilter = (props: DrinkFilterProps) => {
         >
           <Form.Control
             type="text"
-            
             onChange={(e) => setFilterName(e.target.value)}
           />
         </FloatingLabel>
@@ -76,7 +76,7 @@ const DrinkFilter = (props: DrinkFilterProps) => {
           <Form.Select onChange={(e) => setFilterIngredient(e.target.value)}>
             <option></option>
             {props.ingredientList.map((item) => (
-              <option value={item}>{item}</option>
+              <option value={item.name}>{item.name}</option>
             ))}
           </Form.Select>
         </FloatingLabel>

@@ -56,7 +56,6 @@ const FriendsDialog = () => {
       .then((res) => console.log(res.data))
   }
 
-  //TODO
   const handleAcceptFriendRequest = (request: string, index: number) => {
     const updatedRequests = [...requests]
     updatedRequests.splice(index, 1)
@@ -70,7 +69,6 @@ const FriendsDialog = () => {
       .then((res) => console.log(res.data))
   }
 
-  //TODO
   const handleDeclineFriendRequest = (request: string, index: number) => {
     console.log("friend request declined")
     const updatedRequests = [...requests]

@@ -71,6 +71,7 @@ router.route("/:id").get((req, res) => {
         favouritedIngredients: user.favouritedIngredients,
         favouritedDrinks: user.favouritedDrinks,
         favouritedPubs: user.favouritedPubs,
+        role: user.role,
       })
     })
     .catch((err) => res.status(400).json("Error " + err))
@@ -147,19 +148,13 @@ router.route("/update-requests/:id").post((req, res) => {
 router.route("/sendRequest").post(async (req, res) => {
   const { id, email } = req.body
   try {
-    // Find the user with the specified email
     const user = await Users.findOne({ email })
-
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
-
-    // Check if the ID is already in the user's requests array
     if (!user.requests.includes(id)) {
-      // Update user's requests array with the provided ID
       user.requests.push(id)
       await user.save()
-
       return res.status(200).json({ message: "Request added successfully" })
     } else {
       return res.status(400).json({ message: "Request already sent" })
@@ -173,43 +168,27 @@ router.route("/sendRequest").post(async (req, res) => {
 router.route("/acceptRequest").post(async (req, res) => {
   const { id, email } = req.body
   try {
-    // Find the user who is accepting the request
     const acceptingUser = await Users.findById(id)
-
     if (!acceptingUser) {
       return res.status(404).json({ message: "User not found" })
     }
-
-    // Find the user whose request is being accepted
     const sendingUser = await Users.findOne({ email })
-
     if (!sendingUser) {
       return res.status(404).json({ message: "Sending user not found" })
     }
-
-    // Remove the accepting user's ID from the sending user's requests array
     sendingUser.requests = sendingUser.requests.filter(
       (requestId) => requestId.toString() !== acceptingUser._id.toString()
     )
-
-    // Add the accepting user's ID to the sending user's friends array
     sendingUser.friends.push(acceptingUser._id)
-
-    // Remove the sending user's ID from the accepting user's requests array
     acceptingUser.requests = acceptingUser.requests.filter(
       (requestId) => requestId.toString() !== sendingUser._id.toString()
     )
-
-    // Add the sending user's ID to the accepting user's friends array
     acceptingUser.friends.push(sendingUser._id)
 
-    // Save changes to both users
     await acceptingUser.save()
     await sendingUser.save()
-
     return res.status(200).json({ message: "Request accepted successfully" })
   } catch (error) {
-    console.error("Error:", error)
     return res.status(500).json({ message: "Internal server error" })
   }
 })
@@ -217,31 +196,20 @@ router.route("/acceptRequest").post(async (req, res) => {
 router.route("/declineRequest").post(async (req, res) => {
   const { id, email } = req.body
   try {
-    // Find the user who wants to decline the request
     const user = await Users.findById(id)
-
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
-
-    // Find the user who sent the request
     const requestingUser = await Users.findOne({ email })
-    console.log(requestingUser)
     if (!requestingUser) {
       return res.status(404).json({ message: "Requesting user not found" })
     }
-
-    // Remove the requesting user's ID from the user's requests array
     user.requests = user.requests.filter(
       (requestId) => requestId.toString() !== requestingUser._id.toString()
     )
-
-    // Save changes to the user
     await user.save()
-
     return res.status(200).json({ message: "Request declined successfully" })
   } catch (error) {
-    console.error("Error:", error)
     return res.status(500).json({ message: "Internal server error" })
   }
 })
@@ -250,39 +218,26 @@ router.route("/deleteFriend").post(async (req, res) => {
   const { id, email } = req.body
   console.log(req.body)
   try {
-    // Find the user who wants to delete the friend
     const user = await Users.findById(id)
     console.log(user)
     if (!user) {
       return res.status(404).json({ message: "User not found" })
     }
-
-    // Find the friend to delete
     const friendToDelete = await Users.findOne({ email })
-    console.log(friendToDelete)
-
     if (!friendToDelete) {
       return res.status(404).json({ message: "Friend not found" })
     }
-
-    // Remove the friend from the user's friends array
     user.friends = user.friends.filter(
       (friendId) => friendId.toString() !== friendToDelete._id.toString()
     )
-
-    // Remove the user from the friend's friends array
     friendToDelete.friends = friendToDelete.friends.filter(
       (friendId) => friendId.toString() !== user._id.toString()
     )
-
-    // Save changes to both users
     await user.save()
     await friendToDelete.save()
     console.log(user.friends)
     return res.json(user.friends)
-    //return res.status(200).json(user.friends)
   } catch (error) {
-    console.error("Error:", error)
     return res.status(500).json({ message: "Internal server error" })
   }
 })
@@ -291,7 +246,6 @@ router.route("/update-ingredients/:id").post((req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
       user.favouritedIngredients = req.body.favouritedArray
-
       user
         .save()
         .then(() => res.json("User updated"))
@@ -303,7 +257,6 @@ router.route("/update-drinks/:id").post((req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
       user.favouritedDrinks = req.body.favouritedArray
-
       user
         .save()
         .then(() => res.json("User updated"))
@@ -316,7 +269,6 @@ router.route("/update-pubs/:id").post((req, res) => {
   Users.findById(req.params.id)
     .then((user) => {
       user.favouritedPubs = req.body.favouritedArray
-
       user
         .save()
         .then(() => res.json("User updated"))

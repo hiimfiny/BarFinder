@@ -3,7 +3,12 @@ import "./user.css"
 import { useAppDispatch } from "../../app/hooks"
 import { setLoggedIn } from "../../features/UISlice"
 import axios from "axios"
-import { setFriends, setRequests, setUserId } from "../../features/UserSlice"
+import {
+  setFriends,
+  setRequests,
+  setRole,
+  setUserId,
+} from "../../features/UserSlice"
 import { Toast } from "primereact/toast"
 const Login = (props: { onSwitchLoginState: () => void }) => {
   const dispatch = useAppDispatch()
@@ -50,6 +55,10 @@ const Login = (props: { onSwitchLoginState: () => void }) => {
     axios.get(`http://localhost:5000/users/requestsNames/${id}`).then((res) => {
       console.log(res.data)
       dispatch(setRequests(res.data))
+    })
+    axios.get(`http://localhost:5000/users/${id}`).then((res) => {
+      console.log(res.data)
+      dispatch(setRole(res.data.role))
     })
   }
 

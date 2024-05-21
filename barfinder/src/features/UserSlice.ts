@@ -23,7 +23,7 @@ const initialState: User = {
   //TODO Only for testing, remove later
   user_id: "6641028b4dcbe9a88235870f",
   //user_id: "",
-  role: "",
+  role: "user",
   favourited: { ingredients: [], drinks: [], pubs: [] },
   friends: [],
   requests: [],

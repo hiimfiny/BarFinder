@@ -3,6 +3,7 @@ import UIStateReducer from "../features/UISlice"
 import UserReducer from "../features/UserSlice"
 import IngredientReducer from "../features/IngredientSlice"
 import ListReducer from "../features/ListSlice"
+import PubReducer from "../features/PubSlice"
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: UserReducer,
     lists: ListReducer,
     ingredients: IngredientReducer,
+    pub: PubReducer,
   },
 })
 

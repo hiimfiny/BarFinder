@@ -9,6 +9,7 @@ import axios from "axios"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import {
   getFavourited,
+  getRole,
   getUserId,
   setFavouritedIngredients,
 } from "../../features/UserSlice"
@@ -16,15 +17,13 @@ import { getIngredients, setIngredients } from "../../features/ListSlice"
 import { Ingredient, defaultIngredient } from "../../features/IngredientSlice"
 import { Dialog } from "primereact/dialog"
 
-type IngredientsPanelProps = {
-  adminUser: boolean
-}
-
 //TODO Scrollpanel & rows/page
 //TODO Edit and add form styling
-const IngredientsPanel = (props: IngredientsPanelProps) => {
+const IngredientsPanel = () => {
   const dispatch = useAppDispatch()
   const user_id = useAppSelector(getUserId)
+  const user_role = useAppSelector(getRole)
+  const user_admin = user_role === "admin"
   const favourited = useAppSelector(getFavourited).ingredients
   const ingredientList = useAppSelector(getIngredients)
   const [first, setFirst] = useState(0)
@@ -202,7 +201,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
           <Button variant="primary" onClick={clearFilter}>
             Clear filter
           </Button>
-          {props.adminUser && (
+          {user_admin && (
             <Button variant="primary" onClick={handleShowForm}>
               Add ingredient
             </Button>
@@ -254,7 +253,7 @@ const IngredientsPanel = (props: IngredientsPanelProps) => {
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
                       isFavourited={favourited.includes(item._id)}
-                      adminUser={props.adminUser}
+                      adminUser={user_admin}
                     />
                   </div>
                 ))}

@@ -1,33 +1,29 @@
 import React, { useState } from "react"
-import { Button, Modal, Stack } from "react-bootstrap"
+import { Button, Stack } from "react-bootstrap"
 import { DrinkType, FilterDrinkType } from "../Types"
 import DrinkForm from "./DrinkForm"
-import Drink from "./Drink"
+import DrinkItem from "./Drink"
 import DrinkFilter from "./DrinkFilter"
-import PaginationPanel from "../PaginationPanel"
 import axios from "axios"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { getFavourited, getUserId } from "../../features/UserSlice"
-import { getDrinks } from "../../features/ListSlice"
+import { getFavourited, getRole, getUserId } from "../../features/UserSlice"
+import { getDrinks, getIngredients, setDrinks } from "../../features/ListSlice"
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 import { Dialog } from "primereact/dialog"
-type DrinkPanelProps = {
-  DrinksList: DrinkType[]
-  favouritedByUser: string[]
-  changeDrinks: (array: DrinkType[]) => void
-  adminUser: boolean
-  IngredientList: string[]
-  changeFavourite: (list: string, array: string[]) => void
-  user_id: string
-}
-//TODO connect redux
+import { setFavouritedDrinks } from "../../features/UserSlice"
+import { Drink, defaultDrink } from "../../features/ListSlice"
+
 //TODO style cards, add scrollpanel
-//add and edit modal->dialog
-const DrinkPanel = (props: DrinkPanelProps) => {
+const DrinkPanel = () => {
   const dispatch = useAppDispatch()
   const user_id = useAppSelector(getUserId)
+  const user_role = useAppSelector(getRole)
+  const user_admin = user_role === "admin"
   const favourited = useAppSelector(getFavourited).drinks
   const drinkList = useAppSelector(getDrinks)
+  const ingredientList = useAppSelector(getIngredients)
+  const [filterResult, setFilterResult] = useState(defaultDrink)
+
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(5)
 
@@ -36,67 +32,52 @@ const DrinkPanel = (props: DrinkPanelProps) => {
     setRows(event.rows)
   }
 
-  const page_size = 5
-  const [DrinksList, setDrinksList] = useState(props.DrinksList)
-  const [filterDrinksList, setFilterDrinksList] = useState(props.DrinksList)
-  const [favouritedByUser, setFavouritedByUser] = useState(
-    props.favouritedByUser
-  )
   const [showForm, setShowForm] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
-  const [pageNumber, setPageNumber] = useState(1)
 
   const handleCloseForm = () => setShowForm(false)
   const handleShowForm = () => setShowForm(true)
 
   const handleShowFilter = () => setShowFilter(!showFilter)
 
-  const clearFilter = () => {
-    setFilterDrinksList(DrinksList)
-  }
-
   const onFavouriteClick = (id: string) => {
-    console.log(id + " favourited")
-    console.log(favouritedByUser)
-    let array = favouritedByUser
-    console.log(array)
+    let array = favourited
     if (array.includes(id)) {
       array = array.filter((item) => item !== id)
     } else {
       array = [...array, id]
     }
-    setFavouritedByUser(array)
-    props.changeFavourite("drink", array)
+    dispatch(setFavouritedDrinks(array))
     axios
-      .post(`http://localhost:5000/users/update-drinks/${props.user_id}`, {
+      .post(`http://localhost:5000/users/update-drinks/${user_id}`, {
         favouritedArray: array,
       })
       .then((res) => console.log(res.data))
   }
 
-  const onFormSubmit = (formResults: DrinkType) => {
-    console.log(formResults)
+  const onFormSubmit = (formResult: Drink) => {
+    console.log(formResult)
     handleCloseForm()
 
     axios
-      .post("http://localhost:5000/drinks/add", formResults)
+      .post("http://localhost:5000/drinks/add", formResult)
       .then((res) => console.log(res.data))
-    props.changeDrinks([...DrinksList, formResults])
-    setDrinksList([...DrinksList, formResults])
-    setFilterDrinksList([...filterDrinksList, formResults])
+
+    dispatch(setDrinks([...drinkList, formResult]))
   }
 
   const onFilterSubmit = (filterResults: FilterDrinkType) => {
-    const formResultList = DrinksList.filter(
-      (filterItem) =>
-        (filterResults.name !== "" && filterItem.name === filterResults.name) ||
-        (filterResults.type !== "" && filterItem.type === filterResults.type) ||
-        (filterResults.glass !== "" &&
-          filterItem.glass === filterResults.glass) ||
-        (filterResults.ingredients[0] !== "" &&
-          filterItem.ingredients.includes(filterResults.ingredients[0]))
-    )
-    setFilterDrinksList(formResultList)
+    console.log("In filtersubmit!")
+    console.log(filterResults)
+    if (filterResults !== defaultDrink) {
+      console.log("In the if")
+      setFilterResult((prevFilterResult) => ({
+        ...prevFilterResult,
+        ...filterResults,
+      }))
+    }
+    console.log(filterResults)
+
     handleShowFilter()
   }
 
@@ -108,15 +89,13 @@ const DrinkPanel = (props: DrinkPanelProps) => {
       )
       .then((res) => console.log(res.data))
     console.log(formResults)
-    const updatedDrinks = DrinksList.map((item) => {
+    const updatedDrinks = drinkList.map((item) => {
       if (item._id === formResults._id) {
         return { ...item, ...formResults }
       }
       return item
     })
-    props.changeDrinks(updatedDrinks)
-    setDrinksList(updatedDrinks)
-    setFilterDrinksList(updatedDrinks)
+    dispatch(setDrinks(updatedDrinks))
   }
 
   const onDeleteClick = (id: string) => {
@@ -124,10 +103,32 @@ const DrinkPanel = (props: DrinkPanelProps) => {
       .delete("http://localhost:5000/drinks/" + id)
       .then((res) => console.log(res.data))
 
-    let newList = filterDrinksList.filter((el) => el._id !== id)
+    let newList = drinkList.filter((el) => el._id !== id)
+    dispatch(setDrinks(newList))
+  }
 
-    setFilterDrinksList(newList)
-    props.changeDrinks(newList)
+  const applyFilter = () => {
+    const formResultList =
+      filterResult === defaultDrink
+        ? drinkList
+        : drinkList.filter(
+            (filterItem) =>
+              (filterResult.name !== "" &&
+                filterItem.name === filterResult.name) ||
+              (filterResult.type !== "" &&
+                filterItem.type === filterResult.type) ||
+              (filterResult.glass !== "" &&
+                filterItem.glass === filterResult.glass) ||
+              (filterResult.ingredients[0] !== "" &&
+                filterItem.ingredients.includes(filterResult.ingredients[0]))
+          )
+    console.log(formResultList)
+    return formResultList
+  }
+
+  const clearFilter = () => {
+    setFilterResult(defaultDrink)
+    setShowFilter(false)
   }
 
   return (
@@ -144,7 +145,7 @@ const DrinkPanel = (props: DrinkPanelProps) => {
           <Button variant="primary" onClick={clearFilter}>
             Clear filter
           </Button>
-          {props.adminUser && (
+          {user_admin && (
             <Button variant="primary" onClick={handleShowForm}>
               Add drink
             </Button>
@@ -154,13 +155,12 @@ const DrinkPanel = (props: DrinkPanelProps) => {
         {showFilter && (
           <DrinkFilter
             onFilterSubmit={onFilterSubmit}
-            ingredientList={props.IngredientList}
+            ingredientList={ingredientList}
           ></DrinkFilter>
         )}
         <Dialog
           visible={showForm}
           onHide={handleCloseForm}
-          //closeIcon={true}
           draggable={false}
           dismissableMask={true}
           header="Add an ingredient"
@@ -174,24 +174,20 @@ const DrinkPanel = (props: DrinkPanelProps) => {
             ingredients={[]}
             glass={""}
             img={""}
-            ingredientList={props.IngredientList}
           ></DrinkForm>
         </Dialog>
       </div>
       <div>
-        {filterDrinksList.length === 0 ? (
+        {applyFilter().length === 0 ? (
           <div>Nothing to show</div>
         ) : (
           <div>
             <Stack gap={3}>
-              {filterDrinksList
-                .slice(
-                  (pageNumber - 1) * page_size,
-                  (pageNumber - 1) * page_size + page_size
-                )
+              {applyFilter()
+                .slice(first, first + rows)
                 .map((item) => (
                   <div>
-                    <Drink
+                    <DrinkItem
                       key={item._id}
                       _id={item._id}
                       name={item.name}
@@ -202,10 +198,10 @@ const DrinkPanel = (props: DrinkPanelProps) => {
                       onFavouriteClick={onFavouriteClick}
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
-                      isFavourited={favouritedByUser.includes(item._id)}
-                      adminUser={props.adminUser}
-                      ingredientsList={props.IngredientList}
-                    ></Drink>
+                      isFavourited={favourited.includes(item._id)}
+                      adminUser={user_admin}
+                      ingredientsList={ingredientList}
+                    ></DrinkItem>
                   </div>
                 ))}
             </Stack>

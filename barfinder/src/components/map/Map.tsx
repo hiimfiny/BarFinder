@@ -7,19 +7,18 @@ import "./map.css"
 import { PubType } from "../Types"
 import MapSidePanel from "./MapSidePanel"
 import MapFilter from "./MapFilter"
+import { useAppSelector } from "../../app/hooks"
+import { getSelectedPubId } from "../../features/PubSlice"
+import { getPubs } from "../../features/ListSlice"
 type MapOptions = google.maps.MapOptions
 type LatLngLiteral = google.maps.LatLngLiteral
 
-type MapProps = {
-  pubsList: PubType[]
-  selectedPubId: string
-}
 //TODO add filter
 
-const Map = (props: MapProps) => {
-  const [pubsList, setPubsList] = useState(props.pubsList)
-  const [selectedPub, setSelectedPub] = useState(props.pubsList.at(0))
-  const [selectedPubId, setSelectedPubId] = useState(props.selectedPubId)
+const Map = () => {
+  const publist = useAppSelector(getPubs)
+  const [selectedPub, setSelectedPub] = useState(publist.at(0))
+  const selectedPubId = useAppSelector(getSelectedPubId)
   const [sidePanel, setSidePanel] = useState(false)
 
   const { isLoaded } = useLoadScript({
@@ -47,11 +46,9 @@ const Map = (props: MapProps) => {
   }
 
   useEffect(() => {
-    if (props.selectedPubId !== "") {
-      selectPub(
-        props.pubsList.find((pub) => pub._id === props.selectedPubId) as PubType
-      )
-      setSelectedPubId("")
+    if (selectedPubId !== "") {
+      selectPub(publist.find((pub) => pub._id === selectedPubId) as PubType)
+      //setSelectedPubId("")
     } else {
       setSidePanel(false)
     }
@@ -78,7 +75,7 @@ const Map = (props: MapProps) => {
               options={options}
               mapContainerClassName="map"
             >
-              {pubsList.map((pub) => (
+              {publist.map((pub) => (
                 <MarkerF
                   key={pub._id}
                   position={{ lat: pub.location[0], lng: pub.location[1] }}

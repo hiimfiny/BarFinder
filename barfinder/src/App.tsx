@@ -5,11 +5,9 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Panel></Panel>
-      </div>
-    </BrowserRouter>
+    <div className="App">
+      <Panel></Panel>
+    </div>
   )
 }
 

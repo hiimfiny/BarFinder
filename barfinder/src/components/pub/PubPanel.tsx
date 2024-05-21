@@ -14,29 +14,35 @@ import Pub from "./Pub"
 import PubFilter from "./PubFilter"
 import PubForm from "./PubForm"
 import axios from "axios"
-type PubPanelProps = {
-  pubsList: PubType[]
-  favouritedByUser: string[]
-  changePubs: (array: PubType[]) => void
-  onLocationPinClick: (pubId: string) => void
-  adminUser: boolean
-  IngredientList: string[]
-  changeFavourite: (list: string, array: string[]) => void
-  drinksList: DrinkType[]
-  user_id: string
-}
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import {
+  getDrinks,
+  getIngredients,
+  getPubs,
+  setPubs,
+} from "../../features/ListSlice"
+import {
+  getFavourited,
+  getRole,
+  getUserId,
+  setFavouritedPubs,
+} from "../../features/UserSlice"
 
 //TODO style add and edit form
 //TODO filter
 //TODO add redux
-const PubPanel = (props: PubPanelProps) => {
-  const page_size = 5
+const PubPanel = () => {
+  const dispatch = useAppDispatch()
+  const user_id = useAppSelector(getUserId)
+  const user_role = useAppSelector(getRole)
+  const user_admin = user_role === "admin"
+  const favourited = useAppSelector(getFavourited).pubs
 
-  const [pubsList, setPubsList] = useState(props.pubsList)
-  const [filterPubsList, setFilterPubsList] = useState(props.pubsList)
-  const [favouritedByUser, setFavouritedByUser] = useState(
-    props.favouritedByUser
-  )
+  const pubsList = useAppSelector(getPubs)
+  const ingredientList = useAppSelector(getIngredients)
+  const drinksList = useAppSelector(getDrinks)
+  const page_size = 5
+  const [filterPubsList, setFilterPubsList] = useState(pubsList)
 
   const [showForm, setShowForm] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
@@ -60,16 +66,16 @@ const PubPanel = (props: PubPanelProps) => {
   }
 
   const onFavouriteClick = (id: string) => {
-    let array = favouritedByUser
+    let array = favourited
     if (array.includes(id)) {
       array = array.filter((item) => item !== id)
     } else {
       array = [...array, id]
     }
-    setFavouritedByUser(array)
-    props.changeFavourite("pub", array)
+    dispatch(setFavouritedPubs(array))
+
     axios
-      .post(`http://localhost:5000/users/update-pubs/${props.user_id}`, {
+      .post(`http://localhost:5000/users/update-pubs/${user_id}`, {
         favouritedArray: array,
       })
       .then((res) => console.log(res.data))
@@ -81,8 +87,8 @@ const PubPanel = (props: PubPanelProps) => {
     axios
       .post("http://localhost:5000/pubs/add", formResults)
       .then((res) => console.log(res.data))
-    props.changePubs([...pubsList, formResults])
-    setPubsList([...pubsList, formResults])
+
+    dispatch(setPubs([...pubsList, formResults]))
     setFilterPubsList([...pubsList, formResults])
   }
 
@@ -97,8 +103,8 @@ const PubPanel = (props: PubPanelProps) => {
       }
       return item
     })
-    props.changePubs(updatedPubs)
-    setPubsList(updatedPubs)
+
+    dispatch(setPubs(updatedPubs))
     setFilterPubsList(updatedPubs)
   }
 
@@ -123,7 +129,7 @@ const PubPanel = (props: PubPanelProps) => {
 
     let newList = filterPubsList.filter((item) => item._id !== id)
     setFilterPubsList(newList)
-    props.changePubs(newList)
+    dispatch(setPubs(newList))
   }
   const onRateClick = (ratings: number[], id: string) => {
     axios
@@ -145,7 +151,7 @@ const PubPanel = (props: PubPanelProps) => {
           <Button variant="primary" onClick={clearFilter}>
             Clear filter
           </Button>
-          {props.adminUser && (
+          {user_admin && (
             <Button variant="primary" onClick={handleShowForm}>
               Add pub
             </Button>
@@ -155,7 +161,7 @@ const PubPanel = (props: PubPanelProps) => {
         {showFilter && (
           <PubFilter
             onFilterSubmit={onFilterSubmit}
-            drinksList={props.drinksList}
+            drinksList={drinksList}
           ></PubFilter>
         )}
 
@@ -202,10 +208,9 @@ const PubPanel = (props: PubPanelProps) => {
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
                       onRateClick={onRateClick}
-                      onLocationPinClick={props.onLocationPinClick}
-                      isFavourited={favouritedByUser.includes(item._id)}
-                      adminUser={props.adminUser}
-                      ingredientsList={props.IngredientList}
+                      isFavourited={favourited.includes(item._id)}
+                      adminUser={user_admin}
+                      ingredientsList={ingredientList}
                     ></Pub>
                   </div>
                 ))}

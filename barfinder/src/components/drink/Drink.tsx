@@ -1,17 +1,13 @@
 import React, { useState } from "react"
 
-import { DrinkType, FilterDrinkType, emptyStar, fullStar } from "../Types"
-import { Stack, Modal, Image } from "react-bootstrap"
+import { DrinkType } from "../Types"
+
 import { Card } from "primereact/card"
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 import DrinkForm from "./DrinkForm"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { library } from "@fortawesome/fontawesome-svg-core"
+import { Ingredient } from "../../features/ListSlice"
 
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons"
-
-library.add(faPen, faTimes)
 //☆✎✖
 
 type DrinkProps = DrinkType & {
@@ -20,10 +16,10 @@ type DrinkProps = DrinkType & {
   onDeleteClick: (id: string) => void
   isFavourited: boolean
   adminUser: boolean
-  ingredientsList: string[]
+  ingredientsList: Ingredient[]
 }
 
-const Drink = (props: DrinkProps) => {
+const DrinkItem = (props: DrinkProps) => {
   const [showEdit, setShowEdit] = useState(false)
   const handleCloseEdit = () => setShowEdit(false)
   const handleShowEdit = () => setShowEdit(true)
@@ -98,11 +94,10 @@ const Drink = (props: DrinkProps) => {
           img={props.img}
           ingredients={props.ingredients}
           onFormSubmit={onEditSubmit}
-          ingredientList={props.ingredientsList}
         ></DrinkForm>
       </Dialog>
     </div>
   )
 }
 
-export default Drink
+export default DrinkItem

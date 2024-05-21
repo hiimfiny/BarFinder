@@ -1,5 +1,6 @@
 import { RootState } from "../app/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Pub } from "./PubSlice"
 
 export type Ingredient = {
   _id: string
@@ -17,8 +18,9 @@ export type Drink = {
   _id: string
   name: string
   type: string
-  ingredients: Ingredient[]
+  ingredients: string[]
   glass: string
+  img: string
 }
 
 export const defaultDrink: Drink = {
@@ -27,16 +29,19 @@ export const defaultDrink: Drink = {
   type: "",
   ingredients: [],
   glass: "",
+  img: "",
 }
 
 export type List = {
   ingredients: Ingredient[]
   drinks: Drink[]
+  pubs: Pub[]
 }
 
 const initialState: List = {
   ingredients: [],
   drinks: [],
+  pubs: [],
 }
 
 export const listSlice = createSlice({
@@ -49,12 +54,15 @@ export const listSlice = createSlice({
     setDrinks: (state, action: PayloadAction<Drink[]>) => {
       state.drinks = action.payload
     },
+    setPubs: (state, action: PayloadAction<Pub[]>) => {
+      state.pubs = action.payload
+    },
   },
 })
 
-export const { setIngredients, setDrinks } = listSlice.actions
 export const getIngredients = (state: RootState) => state.lists.ingredients
 export const getDrinks = (state: RootState) => state.lists.drinks
-/* export const getLoggedIn = (state: RootState) => state.uiState.loggedIn
-export const { setLoggedIn } = UIStateSlice.actions */
+export const getPubs = (state: RootState) => state.lists.pubs
+
+export const { setIngredients, setDrinks, setPubs } = listSlice.actions
 export default listSlice.reducer
