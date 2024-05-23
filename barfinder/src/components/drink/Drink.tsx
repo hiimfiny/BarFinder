@@ -33,7 +33,11 @@ const DrinkItem = (props: DrinkProps) => {
   const header = <div className="drink-card-header">{props.name}</div>
   return (
     <div className="drink-card">
-      <Card header={header} className="md:w-25rem">
+      <Card
+        header={header}
+        className="md:w-25rem"
+        style={{ borderRadius: "10px" }}
+      >
         <div className="drink-card-content">
           <div className="drink-card-text">
             <img

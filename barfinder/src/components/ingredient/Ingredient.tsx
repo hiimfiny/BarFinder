@@ -30,7 +30,11 @@ const IngredientItem = (props: IngredientProps) => {
   const header = <div className="ingredient-card-header">{props.name}</div>
   return (
     <div className="ingredient-card">
-      <Card header={header} className="md:w-25rem">
+      <Card
+        header={header}
+        className="md:w-25rem"
+        style={{ borderRadius: "10px" }}
+      >
         <div className="ingredient-card-content">
           <div className="ingredient-card-text">
             {props.type + (props.abv === 0 ? " " : " (" + props.abv + "%)")}

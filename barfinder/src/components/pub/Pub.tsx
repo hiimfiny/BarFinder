@@ -67,7 +67,7 @@ const Pub = (props: PubProps) => {
     navigate("/map")
   }
   return (
-    <Card style={{ width: "30rem", margin: "auto" }}>
+    <Card style={{ width: "30rem", margin: "auto", borderRadius: "10px" }}>
       <Card.Body>
         <Card.Title>{props.name}</Card.Title>
         <div className="d-flex justify-content-between">

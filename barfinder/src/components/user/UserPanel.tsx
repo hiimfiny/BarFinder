@@ -31,7 +31,7 @@ const UserPanel = () => {
                 alt="Profile Picture"
                 imageClassName="profile-picture"
               />
-              <div>{userID}</div>
+              <div>{}</div>
             </div>
             <div className="profile-options">
               <Button
@@ -80,38 +80,6 @@ const UserPanel = () => {
             content={<FriendsDialog></FriendsDialog>}
           ></Dialog>
           <div className="user-panel"></div>
-          {/* <Col lg={3} className="profile-col">
-            <Row className="profile-picture-container">
-              <div>
-                <Image
-                  src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
-                  alt="Profile Picture"
-                  className="profile-picture"
-                  roundedCircle
-                />
-              </div>
-            </Row>
-            <Row>
-              <div
-                className="profile-options"
-                style={{ background: "#fef6c9" }}
-              >
-                <Button className="mb-2">Friends</Button>
-                <Button className="mb-2">Settings</Button>
-              </div>
-            </Row>
-          </Col>
-          <Col>
-            <Row>
-              <div>{userID}</div>
-            </Row>
-            <Row>
-              <div></div>
-            </Row>
-            <Row>
-              <div></div>
-            </Row>
-          </Col> */}
         </div>
       )}
     </Card>

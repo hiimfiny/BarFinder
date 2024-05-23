@@ -163,7 +163,7 @@ const DrinkPanel = () => {
           onHide={handleCloseForm}
           draggable={false}
           dismissableMask={true}
-          header="Add an ingredient"
+          header="Add a drink"
           className="edit-dialog"
         >
           <DrinkForm

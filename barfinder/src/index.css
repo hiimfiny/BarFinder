@@ -28,9 +28,6 @@ This is mostly intended for prototyping; please download the pattern and re-host
   background-color: #3e505b !important;
 }
 
-/* TODO: define variables for colors */
-/* TODO: separate selectors */
-
 .p-button:focus {
   box-shadow: none !important;
 }

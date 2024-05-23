@@ -27,10 +27,8 @@ import {
   getUserId,
   setFavouritedPubs,
 } from "../../features/UserSlice"
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 
-//TODO style add and edit form
-//TODO filter
-//TODO add redux
 const PubPanel = () => {
   const dispatch = useAppDispatch()
   const user_id = useAppSelector(getUserId)
@@ -48,7 +46,13 @@ const PubPanel = () => {
   const [showFilter, setShowFilter] = useState(false)
 
   const [pageNumber, setPageNumber] = useState(1)
+  const [first, setFirst] = useState(0)
+  const [rows, setRows] = useState(5)
 
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
+    setFirst(event.first)
+    setRows(event.rows)
+  }
   const handleCloseForm = () => setShowForm(false)
   const handleShowForm = () => setShowForm(true)
 
@@ -218,12 +222,14 @@ const PubPanel = () => {
           </div>
         )}
       </div>
-      <PaginationPanel
-        currentPage={pageNumber}
-        totalElements={filterPubsList.length}
-        pageSize={page_size}
-        selectPage={handleSelectPage}
-      ></PaginationPanel>
+      <div className="pagination-card">
+        <Paginator
+          first={first}
+          rows={rows}
+          totalRecords={filterPubsList.length}
+          onPageChange={onPageChange}
+        />
+      </div>
     </div>
   )
 }

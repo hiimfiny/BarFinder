@@ -146,6 +146,7 @@ const DrinkForm = (props: DrinkFormProps) => {
           <div key={item}>
             {item + " "}
             <Button
+              className={`p-button-rounded p-button-text p-button-outlined`}
               icon="pi pi-times"
               onClick={() => removeFromIngredients(item)}
             ></Button>
@@ -165,7 +166,7 @@ const DrinkForm = (props: DrinkFormProps) => {
             dropdown
           />
           <Button
-            className="form-button"
+            className={`p-button-rounded p-button-text p-button-outlined`}
             icon="pi pi-plus-circle"
             onClick={(e) => {
               e.preventDefault()
@@ -176,7 +177,11 @@ const DrinkForm = (props: DrinkFormProps) => {
       </div>
 
       <div className="form-group">
-        <Button type="submit" label="Submit" className="form-button" />
+        <Button
+          type="submit"
+          label="Submit"
+          className={`p-button-rounded p-button-text p-button-outlined`}
+        />
       </div>
     </form>
   )
