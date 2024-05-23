@@ -32,3 +32,5 @@ app.use("/users", usersRouter)
 app.listen(5000, () => {
   console.log("Server running on port " + port)
 })
+
+module.exports = app

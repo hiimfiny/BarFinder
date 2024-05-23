@@ -26,26 +26,25 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err))
 })
 
-router.route("/:id").delete((req,res) => {
-    Ingredients.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Ingredient deleted'))
-    .catch(err => res.status(400).json("Error: " + err))
+router.route("/:id").delete((req, res) => {
+  Ingredients.findByIdAndDelete(req.params.id)
+    .then(() => res.json("Ingredient deleted"))
+    .catch((err) => res.status(400).json("Error: " + err))
 })
 
-router.route("/update/:id").post((req,res) => {
-    Ingredients.findById(req.params.id)
-    .then(ingredient => {
-        ingredient._id = req.body._id
-        ingredient.name = req.body.name
-        ingredient.abv = req.body.abv
-
-        ingredient.save()
-        .then(() => res.json('Ingredient updated!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+router.route("/update/:id").post((req, res) => {
+  Ingredients.findById(req.params.id)
+    .then((ingredient) => {
+      ingredient._id = req.body._id
+      ingredient.name = req.body.name
+      ingredient.abv = req.body.abv
+      ingredient.type = req.body.type
+      ingredient
+        .save()
+        .then(() => res.json("Ingredient updated!"))
+        .catch((err) => res.status(400).json("Error: " + err))
     })
-    .catch(err => res.status(400).json('Error: ' + err));
-
-
+    .catch((err) => res.status(400).json("Error: " + err))
 })
 
 module.exports = router
